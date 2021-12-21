@@ -1,6 +1,6 @@
 #可以直接用http client 在Tools里
-
-
+GET http://localhost:8080/test/list
+###
 GET http://localhost:8080/hello
 Accept: application/json
 
