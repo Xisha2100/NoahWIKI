@@ -3,7 +3,7 @@
 <mapper namespace="top.nzhz.wiki.mapper.TestMapper" >
 
     <select id="list" resultType="top.nzhz.wiki.domain.Test">
-        select `id`, `name`, `password` from `test`
+        select `id`, `name` from `demo`
     </select>
 
 </mapper>
