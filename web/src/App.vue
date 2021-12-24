@@ -4,9 +4,7 @@
     <a-layout>
       <router-view/>
     </a-layout>
-    <a-layout-footer style="text-align: center">
-      Noah Wiki @ nzhz.top
-    </a-layout-footer>
+    <the-footer></the-footer>
   </a-layout>
 </template>
 
@@ -14,6 +12,7 @@
 import {UserOutlined, LaptopOutlined, NotificationOutlined} from '@ant-design/icons-vue';
 import {defineComponent, ref} from 'vue';
 import TheHeader from "@/components/the-header.vue";
+import TheFooter from "@/components/the-footer.vue";
 
 export default defineComponent({
   name: 'app',
@@ -22,6 +21,7 @@ export default defineComponent({
     LaptopOutlined,
     NotificationOutlined,
     TheHeader,
+    TheFooter,
   },
   setup() {
     return {
