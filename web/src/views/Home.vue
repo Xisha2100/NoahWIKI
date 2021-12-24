@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <a-button type="primary" icon="poweroff" :loading="iconLoading" @click="enterIconLoading">
+      延迟1s
+    </a-button>
     <img alt="Vue logo" src="../assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
   </div>
