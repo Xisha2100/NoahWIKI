@@ -63,9 +63,15 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'Home',
-
+  setup() {
+    console.log("setup");
+    axios.get("http://localhost:8080/ebook/list?name=哥").then((response)=>{
+      console.log(response);
+    })
+  }
 });
 </script>
