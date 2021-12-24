@@ -1,18 +1,6 @@
 <template>
   <a-layout>
-    <a-layout-header class="header">
-      <div class="logo"/>
-      <a-menu
-          theme="dark"
-          mode="horizontal"
-          v-model:selectedKeys="selectedKeys1"
-          :style="{ lineHeight: '64px' }"
-      >
-        <a-menu-item key="1">彭</a-menu-item>
-        <a-menu-item key="2">雅</a-menu-item>
-        <a-menu-item key="3">兰</a-menu-item>
-      </a-menu>
-    </a-layout-header>
+    <the-header></the-header>
     <a-layout>
       <router-view/>
     </a-layout>
@@ -23,13 +11,17 @@
 </template>
 
 <script lang="ts">
-import { UserOutlined, LaptopOutlined, NotificationOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
+import {UserOutlined, LaptopOutlined, NotificationOutlined} from '@ant-design/icons-vue';
+import {defineComponent, ref} from 'vue';
+import TheHeader from "@/components/the-header.vue";
+
 export default defineComponent({
+  name: 'app',
   components: {
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
+    TheHeader,
   },
   setup() {
     return {
