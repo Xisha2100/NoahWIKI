@@ -54,7 +54,8 @@
       <a-layout-content
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
-        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :pagination="pagination" :data-source="ebooks">
+        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :pagination="pagination"
+                :data-source="ebooks">
           <template #renderItem="{ item }">
             <a-list-item key="item.name">
               <template #actions>
@@ -69,7 +70,7 @@
                   <a :href="item.href">{{ item.name }}</a>
                 </template>
                 <template #avatar>
-                  <a-avatar :src="item.cover"/>
+                  <a-avatar shape="square" size="large" :src="item.cover"/>
                 </template>
               </a-list-item-meta>
             </a-list-item>
@@ -96,17 +97,17 @@ export default defineComponent({
       onChange: (page: number) => {
         console.log(page);
       },
-      pageSize: 3,
+      pageSize: 12,
     };
     const actions: Record<string, string>[] = [
-      { type: 'StarOutlined', text: '152' },
-      { type: 'LikeOutlined', text: '156' },
-      { type: 'MessageOutlined', text: '2' },
+      {type: 'StarOutlined', text: '152'},
+      {type: 'LikeOutlined', text: '156'},
+      {type: 'MessageOutlined', text: '2'},
     ];
 
     onMounted(() => {
       console.log("onMounted");
-      axios.get("http://localhost:8080/ebook/list?name=哥德堡").then((response) => {
+      axios.get("http://localhost:8080/ebook/list").then((response) => {
         const data = response.data;
         ebooks.value = data.content;
         ebooks1.books = data.content;
