@@ -90,7 +90,6 @@
 </template>
 
 <script lang="ts">
-import {StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons-vue';
 import {defineComponent, onMounted, ref, reactive, toRef} from 'vue';
 import axios from 'axios';
 
@@ -109,11 +108,6 @@ for (let i = 0; i < 23; i++) {
 }
 export default defineComponent({
   name: 'Home',
-  components: {
-    StarOutlined,
-    LikeOutlined,
-    MessageOutlined,
-  },
   setup() {
     console.log("setup");
     const ebooks = ref();
@@ -125,7 +119,7 @@ export default defineComponent({
       pageSize: 3,
     };
     const actions: Record<string, string>[] = [
-      { type: 'StarOutlined', text: '156' },
+      { type: 'StarOutlined', text: '152' },
       { type: 'LikeOutlined', text: '156' },
       { type: 'MessageOutlined', text: '2' },
     ];
