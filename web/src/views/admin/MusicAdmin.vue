@@ -5,47 +5,127 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <a-table :columns="columns" :data-source="data">
-        <template #headerCell="{ column }">
-          <template v-if="column.key === 'name'">
-        <span>
-          <smile-outlined />
-          Name
-        </span>
-          </template>
+      <a-table
+          :columns="columns"
+          :row-key="record => record.id"
+          :data-source="music"
+          :pagination="pagination"
+          :loading="loading"
+          @change="handleTableChange"
+      >
+        <template #cover="{text:cover}">
+          <a-avatar shape="square" size="large" style="background-color: #87d068">
+            {{cover}}
+          </a-avatar>
+<!--          <img v-if="cover" :src="cover" alt="avatar" />-->
         </template>
 
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'name'">
-            <a>
-              {{ record.name }}
-            </a>
-          </template>
-          <template v-else-if="column.key === 'tags'">
-        <span>
-          <a-tag
-              v-for="tag in record.tags"
-              :key="tag"
-              :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
-          >
-            {{ tag.toUpperCase() }}
-          </a-tag>
-        </span>
-          </template>
-          <template v-else-if="column.key === 'action'">
-        <span>
-          <a>Invite 一 {{ record.name }}</a>
-          <a-divider type="vertical" />
-          <a>Delete</a>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link">
-            More actions
-            <down-outlined />
-          </a>
-        </span>
-          </template>
+        <template v-slot:action="{text,record}">
+          <a-space size="small">
+            <a-button type="primary">
+              编辑
+            </a-button>
+            <a-button type="danger">
+              删除
+            </a-button>
+          </a-space>
         </template>
       </a-table>
     </a-layout-content>
   </a-layout>
 </template>
+
+
+<script lang="ts">
+import {defineComponent, onMounted, ref} from 'vue';
+import axios from 'axios';
+
+export default defineComponent({
+  name: 'AdminMusic',
+  setup() {
+    const music = ref();
+    // const ebooks1 = reactive({books: []});
+    const pagination = ref({
+      current:1,
+      pageSize: 2,
+      total:0
+    });
+    const loading = ref(false);
+
+    const columns = [
+      {
+        title: '封面',
+        dataIndex: 'cover',
+        slots: {customRender: 'cover'}
+      },
+      {
+        title: '名称',
+        dataIndex: 'name'
+      },
+      {
+        title: '作者',
+        dataIndex: 'author'
+      },
+      {
+        title: '分类一',
+        key: 'category1Id',
+        dataIndex: 'category1Id'
+      },
+      {
+        title: '分类二',
+        dataIndex: 'category2Id'
+      },
+      {
+        title: '文档数',
+        dataIndex: 'docCount'
+      },
+      {
+        title: '聆听数',
+        dataIndex: 'listenCount'
+      },
+      {
+        title: '点赞数',
+        dataIndex: 'voteCount'
+      },
+      {
+        title: '操作',
+        key: 'action',
+        slots: { customRender: 'action' }
+      }
+    ];
+
+    const handleQuery=(params: any)=>{
+      loading.value=true;
+      axios.get("music/list",params).then((response)=>{
+        loading.value=false;
+        const data = response.data;
+        music.value=data.content;
+
+        pagination.value.current=params.page;
+      });
+    };
+
+    const handleTableChange = (pagination: any) => {
+      console.log("看看自带的分页参数都有啥：" + pagination);
+      handleQuery({
+        page: pagination.current,
+        size: pagination.pageSize
+      });
+    };
+
+
+    onMounted(() => {
+      handleQuery({});
+    });
+
+    return {
+      music,
+      pagination,
+      columns,
+      loading,
+      handleTableChange
+    };
+
+  }
+});
+</script>

@@ -53,7 +53,7 @@
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
         <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :pagination="pagination"
-                :data-source="ebooks">
+                :data-source="music">
           <template #renderItem="{ item }">
             <a-list-item key="item.name">
               <template #actions>
@@ -84,19 +84,19 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref, reactive, toRef} from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
   name: 'Home',
   setup() {
-    const ebooks = ref();
-    const ebooks1 = reactive({books: []});
+    const music = ref();
+    // const ebooks1 = reactive({books: []});
     const pagination = {
       onChange: (page: number) => {
         console.log(page);
       },
-      pageSize: 12,
+      pageSize: 6,
     };
     const actions: Record<string, string>[] = [
       {type: 'StarOutlined', text: '152'},
@@ -107,14 +107,13 @@ export default defineComponent({
     onMounted(() => {
       axios.get("/music/list").then((response) => {
         const data = response.data;
-        ebooks.value = data.content;
-        ebooks1.books = data.content;
+        music.value = data.content;
       });
     });
 
     return {
-      ebooks,
-      ebooks2: toRef(ebooks1, "books"),
+      music,
+      // ebooks2: toRef(ebooks1, "books"),
       pagination,
       actions,
     };
