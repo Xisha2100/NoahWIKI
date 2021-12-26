@@ -23,13 +23,14 @@ public class MusicService {
     private MusicMapper musicMapper;
 
     public List<MusicResp> list(MusicReq req) {
-        PageHelper.startPage(1,3);
+
 
         MusicExample musicExample = new MusicExample();
         MusicExample.Criteria criteria = musicExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
+        PageHelper.startPage(1,3);
         List<Music> musicList = musicMapper.selectByExample(musicExample);
 
         List<MusicResp> respList = new ArrayList<>();
