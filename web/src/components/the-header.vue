@@ -6,16 +6,22 @@
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
     >
-      <a-menu-item key="1">n1</a-menu-item>
-      <a-menu-item key="2">n2</a-menu-item>
-      <a-menu-item key="3">n3</a-menu-item>
+      <a-menu-item key="/home">
+        <router-link to="/">首页</router-link>
+      </a-menu-item>
+      <a-menu-item key="/admin/music">
+        <router-link to="/admin/music">音乐管理</router-link>
+      </a-menu-item>
+      <a-menu-item key="/about">
+        <router-link to="/about">关于我们</router-link>
+      </a-menu-item>
     </a-menu>
   </a-layout-header>
 </template>
 
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
   name: "the-header",

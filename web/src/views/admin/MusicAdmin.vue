@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>This is an about EBOOK</h1>
+    <h1>管理音乐</h1>
   </div>
 </template>
