@@ -1,6 +1,7 @@
 package top.nzhz.wiki.service;
 
 
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -22,6 +23,8 @@ public class MusicService {
     private MusicMapper musicMapper;
 
     public List<MusicResp> list(MusicReq req) {
+        PageHelper.startPage(1,3);
+
         MusicExample musicExample = new MusicExample();
         MusicExample.Criteria criteria = musicExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
