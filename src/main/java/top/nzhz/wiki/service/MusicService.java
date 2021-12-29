@@ -2,6 +2,9 @@ package top.nzhz.wiki.service;
 
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -22,6 +25,7 @@ public class MusicService {
 //    @Autowired
     private MusicMapper musicMapper;
 
+    private static final Logger LOG = LoggerFactory.getLogger(MusicService.class);
     public List<MusicResp> list(MusicReq req) {
 
 
@@ -30,8 +34,14 @@ public class MusicService {
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(1,2);
         List<Music> musicList = musicMapper.selectByExample(musicExample);
+
+        PageInfo<Music> pageInfo = new PageInfo<>(musicList);
+        LOG.info("总行数:{}",pageInfo.getTotal());
+        LOG.info("总页数:{}",pageInfo.getPages());
+
+
 
         List<MusicResp> respList = new ArrayList<>();
 
