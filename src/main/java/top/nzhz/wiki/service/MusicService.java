@@ -34,7 +34,7 @@ public class MusicService {
         if (!ObjectUtils.isEmpty(req.getName())) {
             criteria.andNameLike("%" + req.getName() + "%");
         }
-        PageHelper.startPage(1,2);
+        PageHelper.startPage(req.getPage(), req.getSize());
         List<Music> musicList = musicMapper.selectByExample(musicExample);
 
         PageInfo<Music> pageInfo = new PageInfo<>(musicList);

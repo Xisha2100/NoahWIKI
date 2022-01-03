@@ -1,6 +1,6 @@
 package top.nzhz.wiki.req;
 
-public class MusicReq {
+public class MusicReq extends PageReq{
     private Long id;
 
     private String name;
