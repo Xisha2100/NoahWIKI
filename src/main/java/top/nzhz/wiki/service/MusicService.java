@@ -13,6 +13,7 @@ import top.nzhz.wiki.domain.MusicExample;
 import top.nzhz.wiki.mapper.MusicMapper;
 import top.nzhz.wiki.req.MusicReq;
 import top.nzhz.wiki.resp.MusicResp;
+import top.nzhz.wiki.resp.PageResp;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -20,15 +21,14 @@ import java.util.List;
 
 @Service
 public class MusicService {
-
-    @Resource
 //    @Autowired
+    @Resource
     private MusicMapper musicMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MusicService.class);
-    public List<MusicResp> list(MusicReq req) {
 
 
+    public PageResp<MusicResp> list(MusicReq req) {
         MusicExample musicExample = new MusicExample();
         MusicExample.Criteria criteria = musicExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -38,10 +38,8 @@ public class MusicService {
         List<Music> musicList = musicMapper.selectByExample(musicExample);
 
         PageInfo<Music> pageInfo = new PageInfo<>(musicList);
-        LOG.info("总行数:{}",pageInfo.getTotal());
-        LOG.info("总页数:{}",pageInfo.getPages());
-
-
+        LOG.info("总行数:{}", pageInfo.getTotal());
+        LOG.info("总页数:{}", pageInfo.getPages());
 
         List<MusicResp> respList = new ArrayList<>();
 
@@ -50,7 +48,13 @@ public class MusicService {
             BeanUtils.copyProperties(music, musicResp);
             respList.add(musicResp);
         }
-        return respList;
+
+        PageResp<MusicResp> pageResp = new PageResp<>();
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(respList);
+
+
+        return pageResp;
     }
 }
 
