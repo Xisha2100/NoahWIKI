@@ -107,7 +107,7 @@ export default defineComponent({
     onMounted(() => {
       axios.get("/music/list").then((response) => {
         const data = response.data;
-        music.value = data.content;
+        music.value = data.content.list;
       });
     });
 
