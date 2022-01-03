@@ -15,9 +15,9 @@
       >
         <template #cover="{text:cover}">
           <a-avatar shape="square" size="large" style="background-color: #87d068">
-            {{cover}}
+            {{ cover }}
           </a-avatar>
-<!--          <img v-if="cover" :src="cover" alt="avatar" />-->
+          <!--          <img v-if="cover" :src="cover" alt="avatar" />-->
         </template>
 
         <template v-slot:action="{text,record}">
@@ -46,9 +46,9 @@ export default defineComponent({
     const music = ref();
     // const ebooks1 = reactive({books: []});
     const pagination = ref({
-      current:1,
-      pageSize: 2,
-      total:0
+      current: 1,
+      pageSize: 3,
+      total: 0
     });
     const loading = ref(false);
 
@@ -90,18 +90,25 @@ export default defineComponent({
       {
         title: '操作',
         key: 'action',
-        slots: { customRender: 'action' }
+        slots: {customRender: 'action'}
       }
     ];
 
-    const handleQuery=(params: any)=>{
-      loading.value=true;
-      axios.get("music/list",params).then((response)=>{
-        loading.value=false;
+    const handleQuery = (params: any) => {
+      loading.value = true;
+      axios.get("music/list", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
+        loading.value = false;
         const data = response.data;
-        music.value=data.content;
+        music.value = data.content.list;
 
-        pagination.value.current=params.page;
+        //重置分页组件
+        pagination.value.current = params.page;
+        pagination.value.total = data.content.total;
       });
     };
 
@@ -115,7 +122,10 @@ export default defineComponent({
 
 
     onMounted(() => {
-      handleQuery({});
+      handleQuery({
+        page: 1,
+        size: pagination.value.pageSize
+      });
     });
 
     return {
