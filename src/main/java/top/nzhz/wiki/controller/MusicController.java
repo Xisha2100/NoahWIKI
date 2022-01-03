@@ -10,6 +10,7 @@ import top.nzhz.wiki.resp.PageResp;
 import top.nzhz.wiki.service.MusicService;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/music")
@@ -22,6 +23,14 @@ public class MusicController {
     public CommonResp list(MusicReq req) {
         CommonResp<PageResp<MusicResp>> resp = new CommonResp<>();
         PageResp<MusicResp> list=musicService.list(req);
+        resp.setContent(list);
+        return resp;
+    }
+
+    @GetMapping("/all")
+    public CommonResp all(MusicReq req) {
+        CommonResp<List<MusicResp>> resp = new CommonResp<>();
+        List<MusicResp> list=musicService.all(req);
         resp.setContent(list);
         return resp;
     }

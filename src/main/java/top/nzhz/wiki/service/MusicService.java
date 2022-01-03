@@ -56,5 +56,23 @@ public class MusicService {
 
         return pageResp;
     }
+
+    public List<MusicResp> all(MusicReq req) {
+        MusicExample musicExample = new MusicExample();
+        MusicExample.Criteria criteria = musicExample.createCriteria();
+        if (!ObjectUtils.isEmpty(req.getName())) {
+            criteria.andNameLike("%" + req.getName() + "%");
+        }
+        List<Music> musicList = musicMapper.selectByExample(musicExample);
+
+        List<MusicResp> respList = new ArrayList<>();
+
+        for (Music music : musicList) {
+            MusicResp musicResp = new MusicResp();
+            BeanUtils.copyProperties(music, musicResp);
+            respList.add(musicResp);
+        }
+        return respList;
+    }
 }
 

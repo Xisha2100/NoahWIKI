@@ -52,7 +52,7 @@
       <a-layout-content
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
-        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}" :pagination="pagination"
+        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}"
                 :data-source="music">
           <template #renderItem="{ item }">
             <a-list-item key="item.name">
@@ -92,12 +92,12 @@ export default defineComponent({
   setup() {
     const music = ref();
     // const ebooks1 = reactive({books: []});
-    const pagination = {
-      onChange: (page: number) => {
-        console.log(page);
-      },
-      pageSize: 6,
-    };
+    // const pagination = {
+    //   onChange: (page: number) => {
+    //     console.log(page);
+    //   },
+    //   pageSize: 6,
+    // };
     const actions: Record<string, string>[] = [
       {type: 'StarOutlined', text: '152'},
       {type: 'LikeOutlined', text: '156'},
@@ -105,16 +105,16 @@ export default defineComponent({
     ];
 
     onMounted(() => {
-      axios.get("/music/list").then((response) => {
+      axios.get("/music/all").then((response) => {
         const data = response.data;
-        music.value = data.content.list;
+        music.value = data.content;
       });
     });
 
     return {
       music,
       // ebooks2: toRef(ebooks1, "books"),
-      pagination,
+      // pagination,
       actions,
     };
 
