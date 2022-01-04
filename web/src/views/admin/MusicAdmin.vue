@@ -62,7 +62,7 @@
       </a-form-item>
 
       <a-form-item label="描述">
-        <a-input v-model:value="musicForm.desc" type="textarea"/>
+        <a-input v-model:value="musicForm.description" type="textarea"/>
       </a-form-item>
     </a-form>
   </a-modal>
