@@ -22,7 +22,7 @@
 
         <template v-slot:action="{text,record}">
           <a-space size="small">
-            <a-button type="primary" @click="edit">
+            <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
             <a-button type="danger">
@@ -40,7 +40,31 @@
       :confirm-loading="confirmModalLoading"
       @ok="handleModalOk"
   >
-    <p>test</p>
+    <a-form
+        :model="musicForm"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 18 }"
+    >
+      <a-form-item label="封面">
+        <a-input v-model:value="musicForm.cover"/>
+      </a-form-item>
+
+      <a-form-item label="名称">
+        <a-input v-model:value="musicForm.name"/>
+      </a-form-item>
+
+      <a-form-item label="分类一">
+        <a-input v-model:value="musicForm.category1Id"/>
+      </a-form-item>
+
+      <a-form-item label="分类二">
+        <a-input v-model:value="musicForm.category2Id"/>
+      </a-form-item>
+
+      <a-form-item label="描述">
+        <a-input v-model:value="musicForm.desc" type="textarea"/>
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 
@@ -129,17 +153,19 @@ export default defineComponent({
       });
     };
 // 表单内容
+    const musicForm=ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
       setTimeout(() => {
-        modalVisible.value=false;
-        modalLoading.value=false;
-      },2000);
+        modalVisible.value = false;
+        modalLoading.value = false;
+      }, 2000);
     };
-    const edit = () => {
-      modalVisible.value=true;
+    const edit = (record: any) =>{
+      modalVisible.value = true;
+      musicForm.value=record;
     };
 
 
@@ -158,7 +184,7 @@ export default defineComponent({
       handleTableChange,
 
       edit,
-
+      musicForm,
       modalVisible,
       modalLoading,
       handleModalOk
