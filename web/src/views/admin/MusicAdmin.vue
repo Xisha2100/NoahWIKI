@@ -5,6 +5,11 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
+      <p>
+        <a-button type="primary" @click="add()" size="large">
+          新增
+        </a-button>
+      </p>
       <a-table
           :columns="columns"
           :row-key="record => record.id"
@@ -47,6 +52,10 @@
     >
       <a-form-item label="封面">
         <a-input v-model:value="musicForm.cover"/>
+      </a-form-item>
+
+      <a-form-item label="作者">
+        <a-input v-model:value="musicForm.author"/>
       </a-form-item>
 
       <a-form-item label="名称">
@@ -176,6 +185,11 @@ export default defineComponent({
       modalVisible.value = true;
       musicForm.value = record;
     };
+    //新增
+    const add = () => {
+      modalVisible.value = true;
+      musicForm.value = {};
+    };
 
 
     onMounted(() => {
@@ -193,6 +207,8 @@ export default defineComponent({
       handleTableChange,
 
       edit,
+      add,
+
       musicForm,
       modalVisible,
       modalLoading,
