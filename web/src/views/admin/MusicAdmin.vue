@@ -22,7 +22,7 @@
 
         <template v-slot:action="{text,record}">
           <a-space size="small">
-            <a-button type="primary">
+            <a-button type="primary" @click="edit">
               编辑
             </a-button>
             <a-button type="danger">
@@ -33,6 +33,15 @@
       </a-table>
     </a-layout-content>
   </a-layout>
+
+  <a-modal
+      v-model:visible="modalVisible"
+      title="音乐表单"
+      :confirm-loading="confirmModalLoading"
+      @ok="handleModalOk"
+  >
+    <p>test</p>
+  </a-modal>
 </template>
 
 
@@ -119,6 +128,19 @@ export default defineComponent({
         size: pagination.pageSize
       });
     };
+// 表单内容
+    const modalVisible = ref(false);
+    const modalLoading = ref(false);
+    const handleModalOk = () => {
+      modalLoading.value = true;
+      setTimeout(() => {
+        modalVisible.value=false;
+        modalLoading.value=false;
+      },2000);
+    };
+    const edit = () => {
+      modalVisible.value=true;
+    };
 
 
     onMounted(() => {
@@ -133,7 +155,13 @@ export default defineComponent({
       pagination,
       columns,
       loading,
-      handleTableChange
+      handleTableChange,
+
+      edit,
+
+      modalVisible,
+      modalLoading,
+      handleModalOk
     };
 
   }
