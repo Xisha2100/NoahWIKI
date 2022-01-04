@@ -11,8 +11,9 @@ import org.springframework.util.ObjectUtils;
 import top.nzhz.wiki.domain.Music;
 import top.nzhz.wiki.domain.MusicExample;
 import top.nzhz.wiki.mapper.MusicMapper;
-import top.nzhz.wiki.req.MusicReq;
-import top.nzhz.wiki.resp.MusicResp;
+import top.nzhz.wiki.req.MusicQueryReq;
+import top.nzhz.wiki.req.MusicSaveReq;
+import top.nzhz.wiki.resp.MusicQueryResp;
 import top.nzhz.wiki.resp.PageResp;
 
 import javax.annotation.Resource;
@@ -21,14 +22,14 @@ import java.util.List;
 
 @Service
 public class MusicService {
-//    @Autowired
+    //    @Autowired
     @Resource
     private MusicMapper musicMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MusicService.class);
 
 
-    public PageResp<MusicResp> list(MusicReq req) {
+    public PageResp<MusicQueryResp> list(MusicQueryReq req) {
         MusicExample musicExample = new MusicExample();
         MusicExample.Criteria criteria = musicExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -41,15 +42,15 @@ public class MusicService {
         LOG.info("总行数:{}", pageInfo.getTotal());
         LOG.info("总页数:{}", pageInfo.getPages());
 
-        List<MusicResp> respList = new ArrayList<>();
+        List<MusicQueryResp> respList = new ArrayList<>();
 
         for (Music music : musicList) {
-            MusicResp musicResp = new MusicResp();
-            BeanUtils.copyProperties(music, musicResp);
-            respList.add(musicResp);
+            MusicQueryResp musicQueryResp = new MusicQueryResp();
+            BeanUtils.copyProperties(music, musicQueryResp);
+            respList.add(musicQueryResp);
         }
 
-        PageResp<MusicResp> pageResp = new PageResp<>();
+        PageResp<MusicQueryResp> pageResp = new PageResp<>();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(respList);
 
@@ -57,7 +58,7 @@ public class MusicService {
         return pageResp;
     }
 
-    public List<MusicResp> all(MusicReq req) {
+    public List<MusicQueryResp> all(MusicQueryReq req) {
         MusicExample musicExample = new MusicExample();
         MusicExample.Criteria criteria = musicExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())) {
@@ -65,14 +66,24 @@ public class MusicService {
         }
         List<Music> musicList = musicMapper.selectByExample(musicExample);
 
-        List<MusicResp> respList = new ArrayList<>();
+        List<MusicQueryResp> respList = new ArrayList<>();
 
         for (Music music : musicList) {
-            MusicResp musicResp = new MusicResp();
-            BeanUtils.copyProperties(music, musicResp);
-            respList.add(musicResp);
+            MusicQueryResp musicQueryResp = new MusicQueryResp();
+            BeanUtils.copyProperties(music, musicQueryResp);
+            respList.add(musicQueryResp);
         }
         return respList;
+    }
+
+    public void save(MusicSaveReq req) {
+        Music music = new Music();
+        BeanUtils.copyProperties(req, music);
+        if (ObjectUtils.isEmpty(req.getId())) {
+            musicMapper.insert(music);
+        } else {
+            musicMapper.updateByPrimaryKey(music);
+        }
     }
 }
 

@@ -1,6 +1,6 @@
 package top.nzhz.wiki.resp;
 
-public class MusicResp {
+public class MusicQueryResp {
     private Long id;
 
     private String name;

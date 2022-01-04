@@ -153,19 +153,28 @@ export default defineComponent({
       });
     };
 // 表单内容
-    const musicForm=ref();
+    const musicForm = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
-      setTimeout(() => {
-        modalVisible.value = false;
-        modalLoading.value = false;
-      }, 2000);
+      //保存更新
+      axios.post("music/save", musicForm.value).then((response) => {
+        const data=response.data;
+        if(data.success){
+          modalVisible.value = false;
+          modalLoading.value = false;
+          //重新加载
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          });
+        }
+        });
     };
-    const edit = (record: any) =>{
+    const edit = (record: any) => {
       modalVisible.value = true;
-      musicForm.value=record;
+      musicForm.value = record;
     };
 
 
