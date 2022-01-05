@@ -41,4 +41,11 @@ public class MusicController {
         return resp;
     }
 
+    @DeleteMapping("/delete/{id}")
+    public CommonResp delete(@PathVariable Long id) {//注意json需要加注解
+        CommonResp resp = new CommonResp<>();
+        musicService.delete(id);
+        return resp;
+    }
+
 }

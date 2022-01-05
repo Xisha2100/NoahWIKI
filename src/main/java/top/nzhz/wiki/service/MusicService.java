@@ -85,5 +85,10 @@ public class MusicService {
             musicMapper.updateByPrimaryKey(music);
         }
     }
+
+
+    public void delete(Long id){
+        musicMapper.deleteByPrimaryKey(id);
+    }
 }
 

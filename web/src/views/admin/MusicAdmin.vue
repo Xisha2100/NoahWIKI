@@ -30,9 +30,16 @@
             <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-            <a-button type="danger">
-              删除
-            </a-button>
+            <a-popconfirm
+                title="删除后不可恢复，请再次确认"
+                ok-text="是"
+                cancel-text="否"
+                @confirm="deleteMusic(record.id)"
+            >
+              <a-button type="danger" >
+                删除
+              </a-button>
+            </a-popconfirm>
           </a-space>
         </template>
       </a-table>
@@ -181,6 +188,7 @@ export default defineComponent({
         }
         });
     };
+    //编辑
     const edit = (record: any) => {
       modalVisible.value = true;
       musicForm.value = record;
@@ -189,6 +197,19 @@ export default defineComponent({
     const add = () => {
       modalVisible.value = true;
       musicForm.value = {};
+    };
+
+    const deleteMusic = (id: number) => {
+      axios.delete("music/delete/"+id).then((response) => {
+        const data=response.data;
+        if(data.success){
+          //重新加载
+          handleQuery({
+            page: pagination.value.current,
+            size: pagination.value.pageSize
+          });
+        }
+      });
     };
 
 
@@ -208,6 +229,8 @@ export default defineComponent({
 
       edit,
       add,
+      deleteMusic,
+
 
       musicForm,
       modalVisible,
