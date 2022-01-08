@@ -88,6 +88,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
+import {message} from "ant-design-vue";
 
 export default defineComponent({
   name: 'AdminMusic',
@@ -96,7 +97,7 @@ export default defineComponent({
     // const ebooks1 = reactive({books: []});
     const pagination = ref({
       current: 1,
-      pageSize: 3,
+      pageSize: 10,
       total: 0
     });
     const loading = ref(false);
@@ -153,11 +154,16 @@ export default defineComponent({
       }).then((response) => {
         loading.value = false;
         const data = response.data;
-        music.value = data.content.list;
+        if(data.success){
 
-        //重置分页组件
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+          music.value = data.content.list;
+
+          //重置分页组件
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        }else {
+          message.error(data.message);
+        }
       });
     };
 
