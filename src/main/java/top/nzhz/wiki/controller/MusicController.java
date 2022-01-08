@@ -36,7 +36,7 @@ public class MusicController {
     }
 
     @PostMapping("/save")
-    public CommonResp save(@RequestBody MusicSaveReq req) {//注意json需要加注解
+    public CommonResp save(@Valid @RequestBody MusicSaveReq req) {//注意json需要加注解
         CommonResp resp = new CommonResp<>();
         musicService.save(req);
         return resp;

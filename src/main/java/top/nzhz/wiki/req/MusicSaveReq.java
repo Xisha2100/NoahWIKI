@@ -1,8 +1,11 @@
 package top.nzhz.wiki.req;
 
+import javax.validation.constraints.NotNull;
+
 public class MusicSaveReq {
     private Long id;
 
+    @NotNull(message = "[名称]不能为空")
     private String name;
 
     private String author;

@@ -182,15 +182,17 @@ export default defineComponent({
       modalLoading.value = true;
       //保存更新
       axios.post("music/save", musicForm.value).then((response) => {
+        modalLoading.value = false;
         const data=response.data;
         if(data.success){
           modalVisible.value = false;
-          modalLoading.value = false;
           //重新加载
           handleQuery({
             page: pagination.value.current,
             size: pagination.value.pageSize
           });
+        } else {
+          message.error(data.message);
         }
         });
     };
