@@ -9,6 +9,7 @@ import top.nzhz.wiki.resp.PageResp;
 import top.nzhz.wiki.service.MusicService;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class MusicController {
     private MusicService musicService;
 
     @GetMapping("/list")
-    public CommonResp list(MusicQueryReq req) {
+    public CommonResp list(@Valid MusicQueryReq req) {
         CommonResp<PageResp<MusicQueryResp>> resp = new CommonResp<>();
         PageResp<MusicQueryResp> list=musicService.list(req);
         resp.setContent(list);
