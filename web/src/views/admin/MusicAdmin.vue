@@ -102,6 +102,7 @@
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
 
 export default defineComponent({
   name: 'AdminMusic',
@@ -215,7 +216,7 @@ export default defineComponent({
     //编辑
     const edit = (record: any) => {
       modalVisible.value = true;
-      musicForm.value = record;
+      musicForm.value = Tool.copy(record);
     };
     //新增
     const add = () => {
