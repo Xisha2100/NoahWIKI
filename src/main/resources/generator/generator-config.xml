@@ -42,8 +42,8 @@
 
 <!--        <table tableName="demo" domainObjectName="Demo"/>-->
 <!--        <table tableName="ebook" domainObjectName="Ebook"/>-->
-        <table tableName="music" domainObjectName="Music"/>
-        <!--<table tableName="category"/>-->
+<!--        <table tableName="music" domainObjectName="Music"/>-->
+        <table tableName="category"/>
         <!--<table tableName="doc"/>-->
         <!--<table tableName="content"/>-->
         <!--<table tableName="user"/>-->

@@ -69,3 +69,22 @@ insert into `music`(id,name,author) values (4,'柴小协','柴可夫斯基');
 insert into `music`(id,name,author) values (5,'图画展览会','穆索尔斯基');
 insert into `music`(id,name,author) values (6,'1812序曲','柴可夫斯基');
 
+drop table if exists `category`;
+create table `category`(
+    `id` bigint not null  comment 'id',
+    `parent` bigint not null default 0 comment '父id',
+    `name` varchar(50) not null comment '名称',
+    `sort` int comment '顺序',
+    primary key (`id`)
+) engine = innodb default charset = utf8mb4 comment '分类';
+
+insert into `category`(id, parent, name, sort) VALUES (100,000,'古典音乐',100);
+insert into `category`(id, parent, name, sort) VALUES (101,100,'中世纪',101);
+insert into `category`(id, parent, name, sort) VALUES (102,100,'文艺复兴',102);
+insert into `category`(id, parent, name, sort) VALUES (103,100,'巴洛克',103);
+insert into `category`(id, parent, name, sort) VALUES (104,100,'古典主义',104);
+insert into `category`(id, parent, name, sort) VALUES (105,100,'浪漫主义',105);
+insert into `category`(id, parent, name, sort) VALUES (106,100,'现代音乐',106);
+
+insert into `category`(id, parent, name, sort) VALUES (200,000,'流行音乐',200);
+
