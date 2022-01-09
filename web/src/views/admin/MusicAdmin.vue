@@ -26,7 +26,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="music"
+          :data-source="musics"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
@@ -66,32 +66,32 @@
       @ok="handleModalOk"
   >
     <a-form
-        :model="musicForm"
+        :model="music"
         :label-col="{ span: 6 }"
         :wrapper-col="{ span: 18 }"
     >
       <a-form-item label="封面">
-        <a-input v-model:value="musicForm.cover"/>
+        <a-input v-model:value="music.cover"/>
       </a-form-item>
 
       <a-form-item label="作者">
-        <a-input v-model:value="musicForm.author"/>
+        <a-input v-model:value="music.author"/>
       </a-form-item>
 
       <a-form-item label="名称">
-        <a-input v-model:value="musicForm.name"/>
+        <a-input v-model:value="music.name"/>
       </a-form-item>
 
       <a-form-item label="分类一">
-        <a-input v-model:value="musicForm.category1Id"/>
+        <a-input v-model:value="music.category1Id"/>
       </a-form-item>
 
       <a-form-item label="分类二">
-        <a-input v-model:value="musicForm.category2Id"/>
+        <a-input v-model:value="music.category2Id"/>
       </a-form-item>
 
       <a-form-item label="描述">
-        <a-input v-model:value="musicForm.description" type="textarea"/>
+        <a-input v-model:value="music.description" type="textarea"/>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -107,7 +107,7 @@ import {Tool} from "@/util/tool";
 export default defineComponent({
   name: 'AdminMusic',
   setup() {
-    const music = ref();
+    const musics = ref();
     const param =ref();
     param.value={};
     // const ebooks1 = reactive({books: []});
@@ -173,7 +173,7 @@ export default defineComponent({
         const data = response.data;
         if(data.success){
 
-          music.value = data.content.list;
+          musics.value = data.content.list;
 
           //重置分页组件
           pagination.value.current = params.page;
@@ -192,13 +192,13 @@ export default defineComponent({
       });
     };
 // 表单内容
-    const musicForm = ref();
+    const music = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
       //保存更新
-      axios.post("music/save", musicForm.value).then((response) => {
+      axios.post("music/save", music.value).then((response) => {
         modalLoading.value = false;
         const data=response.data;
         if(data.success){
@@ -216,12 +216,12 @@ export default defineComponent({
     //编辑
     const edit = (record: any) => {
       modalVisible.value = true;
-      musicForm.value = Tool.copy(record);
+      music.value = Tool.copy(record);
     };
     //新增
     const add = () => {
       modalVisible.value = true;
-      musicForm.value = {};
+      music.value = {};
     };
 
     const deleteMusic = (id: number) => {
@@ -247,7 +247,7 @@ export default defineComponent({
 
     return {
       param,
-      music,
+      musics,
       pagination,
       columns,
       loading,
@@ -259,7 +259,7 @@ export default defineComponent({
       deleteMusic,
 
 
-      musicForm,
+      music,
       modalVisible,
       modalLoading,
       handleModalOk
