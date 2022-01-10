@@ -28,9 +28,9 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public CommonResp all(CategoryQueryReq req) {
+    public CommonResp all() {
         CommonResp<List<CategoryQueryResp>> resp = new CommonResp<>();
-        List<CategoryQueryResp> list=categoryService.all(req);
+        List<CategoryQueryResp> list=categoryService.all();
         resp.setContent(list);
         return resp;
     }

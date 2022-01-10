@@ -31,6 +31,7 @@ public class CategoryService {
 
     public PageResp<CategoryQueryResp> list(CategoryQueryReq req) {
         CategoryExample categoryExample = new CategoryExample();
+        categoryExample.setOrderByClause("sort asc");
         CategoryExample.Criteria criteria = categoryExample.createCriteria();
 //        if (!ObjectUtils.isEmpty(req.getName())) {
 //            criteria.andNameLike("%" + req.getName() + "%");
@@ -58,12 +59,10 @@ public class CategoryService {
         return pageResp;
     }
 
-    public List<CategoryQueryResp> all(CategoryQueryReq req) {
+    public List<CategoryQueryResp> all() {
         CategoryExample categoryExample = new CategoryExample();
-        CategoryExample.Criteria criteria = categoryExample.createCriteria();
-//        if (!ObjectUtils.isEmpty(req.getName())) {
-//            criteria.andNameLike("%" + req.getName() + "%");
-//        }
+        categoryExample.setOrderByClause("sort asc");
+
         List<Category> categoryList = categoryMapper.selectByExample(categoryExample);
 
         List<CategoryQueryResp> respList = new ArrayList<>();
