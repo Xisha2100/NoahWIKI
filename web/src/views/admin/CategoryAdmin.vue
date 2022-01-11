@@ -13,7 +13,7 @@
             </a-button>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="add()" >
+            <a-button type="primary" @click="add()">
               新增
             </a-button>
           </a-form-item>
@@ -22,7 +22,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :loading="loading"
           :pagination="false"
       >
@@ -44,7 +44,7 @@
                 cancel-text="否"
                 @confirm="deleteCategory(record.id)"
             >
-              <a-button type="danger" >
+              <a-button type="danger">
                 删除
               </a-button>
             </a-popconfirm>
@@ -93,11 +93,11 @@ export default defineComponent({
   name: 'AdminCategory',
   setup() {
     const categorys = ref();
-    const param =ref();
-    param.value={};
+    const level1 = ref();
+    const param = ref();
+    param.value = {};
     // const ebooks1 = reactive({books: []});
     const loading = ref(false);
-
     const columns = [
       {
         title: '名称',
@@ -124,12 +124,14 @@ export default defineComponent({
       axios.get("category/all").then((response) => {
         loading.value = false;
         const data = response.data;
-        if(data.success){
+        if (data.success) {
 
           categorys.value = data.content;
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys.value, 0);
 
           //重置分页组件
-        }else {
+        } else {
           message.error(data.message);
         }
       });
@@ -144,15 +146,15 @@ export default defineComponent({
       //保存更新
       axios.post("category/save", category.value).then((response) => {
         modalLoading.value = false;
-        const data=response.data;
-        if(data.success){
+        const data = response.data;
+        if (data.success) {
           modalVisible.value = false;
           //重新加载
           handleQuery();
         } else {
           message.error(data.message);
         }
-        });
+      });
     };
     //编辑
     const edit = (record: any) => {
@@ -166,9 +168,9 @@ export default defineComponent({
     };
 
     const deleteCategory = (id: number) => {
-      axios.delete("category/delete/"+id).then((response) => {
-        const data=response.data;
-        if(data.success){
+      axios.delete("category/delete/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
           //重新加载
           handleQuery();
         }
@@ -182,7 +184,8 @@ export default defineComponent({
 
     return {
       param,
-      categorys,
+      // categorys,
+      level1,
       columns,
       loading,
       handleQuery,
