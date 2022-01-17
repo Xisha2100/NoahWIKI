@@ -17,7 +17,7 @@
             </a-button>
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" @click="add()" >
+            <a-button type="primary" @click="add()">
               新增
             </a-button>
           </a-form-item>
@@ -49,7 +49,7 @@
                 cancel-text="否"
                 @confirm="deleteMusic(record.id)"
             >
-              <a-button type="danger" >
+              <a-button type="danger">
                 删除
               </a-button>
             </a-popconfirm>
@@ -82,12 +82,12 @@
         <a-input v-model:value="music.name"/>
       </a-form-item>
 
-      <a-form-item label="分类一">
-        <a-input v-model:value="music.category1Id"/>
-      </a-form-item>
-
-      <a-form-item label="分类二">
-        <a-input v-model:value="music.category2Id"/>
+      <a-form-item label="分类">
+        <a-cascader
+            v-model:value="categoryIds"
+            :field-names="{label:'name',value:'id',children:'children' }"
+            :options="level1"
+        />
       </a-form-item>
 
       <a-form-item label="描述">
@@ -108,8 +108,8 @@ export default defineComponent({
   name: 'AdminMusic',
   setup() {
     const musics = ref();
-    const param =ref();
-    param.value={};
+    const param = ref();
+    param.value = {};
     // const ebooks1 = reactive({books: []});
     const pagination = ref({
       current: 1,
@@ -171,14 +171,14 @@ export default defineComponent({
       }).then((response) => {
         loading.value = false;
         const data = response.data;
-        if(data.success){
+        if (data.success) {
 
           musics.value = data.content.list;
 
           //重置分页组件
           pagination.value.current = params.page;
           pagination.value.total = data.content.total;
-        }else {
+        } else {
           message.error(data.message);
         }
       });
@@ -192,16 +192,19 @@ export default defineComponent({
       });
     };
 // 表单内容
+    const categoryIds = ref();
     const music = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
+      music.value.category1Id = categoryIds.value[0];
+      music.value.category2Id = categoryIds.value[1];
       //保存更新
       axios.post("music/save", music.value).then((response) => {
         modalLoading.value = false;
-        const data=response.data;
-        if(data.success){
+        const data = response.data;
+        if (data.success) {
           modalVisible.value = false;
           //重新加载
           handleQuery({
@@ -211,23 +214,42 @@ export default defineComponent({
         } else {
           message.error(data.message);
         }
-        });
+      });
     };
     //编辑
     const edit = (record: any) => {
       modalVisible.value = true;
       music.value = Tool.copy(record);
+      categoryIds.value = [music.value.category1Id, music.value.category2Id];
     };
     //新增
     const add = () => {
       modalVisible.value = true;
       music.value = {};
     };
+//查询所有分类
+    const level1 = ref();
+    const handleQueryCategory = () => {
+      loading.value = true;
+      axios.get("category/all").then((response) => {
+        loading.value = false;
+        const data = response.data;
+        if (data.success) {
+          const categorys=data.content;
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys, 0);
+
+          //重置分页组件
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
 
     const deleteMusic = (id: number) => {
-      axios.delete("music/delete/"+id).then((response) => {
-        const data=response.data;
-        if(data.success){
+      axios.delete("music/delete/" + id).then((response) => {
+        const data = response.data;
+        if (data.success) {
           //重新加载
           handleQuery({
             page: pagination.value.current,
@@ -239,6 +261,7 @@ export default defineComponent({
 
 
     onMounted(() => {
+      handleQueryCategory();
       handleQuery({
         page: 1,
         size: pagination.value.pageSize
@@ -262,7 +285,10 @@ export default defineComponent({
       music,
       modalVisible,
       modalLoading,
-      handleModalOk
+      handleModalOk,
+
+      categoryIds,
+      level1
     };
 
   }
