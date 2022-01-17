@@ -95,6 +95,10 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
           console.log("树形结构：", level1.value);
+          axios.get("/music/all").then((response) => {
+            const data = response.data;
+            music.value = data.content;
+          });
         } else {
           message.error(data.message);
         }
@@ -103,10 +107,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory();
-      axios.get("/music/all").then((response) => {
-        const data = response.data;
-        music.value = data.content;
-      });
+
     });
 
     return {

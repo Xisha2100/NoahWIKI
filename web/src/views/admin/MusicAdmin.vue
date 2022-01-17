@@ -238,7 +238,10 @@ export default defineComponent({
           categorys = data.content;
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
-
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          });
           //重置分页组件
         } else {
           message.error(data.message);
@@ -247,10 +250,10 @@ export default defineComponent({
     };
 
     const getCategoryName = (cid: number) => {
-      let result="";
-      categorys.forEach((item:any)=>{
-        if(item.id===cid){
-          result=item.name;
+      let result = "";
+      categorys.forEach((item: any) => {
+        if (item.id === cid) {
+          result = item.name;
         }
       });
       return result;
@@ -272,10 +275,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
+
     });
 
     return {
