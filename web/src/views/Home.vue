@@ -4,20 +4,20 @@
       <a-menu
           mode="inline"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handleClick"
       >
         <a-menu-item key="welcome">
-          <router-link :to="'/'">
-            <MailOutlined />
-            <span>欢迎</span>
-          </router-link>
+          <MailOutlined/>
+          <span>欢迎</span>
         </a-menu-item>
 
         <a-sub-menu v-for="item in level1" :key="item.id" :disabled="false">
           <template v-slot:title>
-            <span><user-outlined />{{item.name}}</span>
+            <span><user-outlined/>{{ item.name }}</span>
           </template>
           <a-menu-item v-for="child in item.children" :key="child.id">
-            <MailOutlined /><span>{{child.name}}</span>
+            <MailOutlined/>
+            <span>{{ child.name }}</span>
           </a-menu-item>
         </a-sub-menu>
       </a-menu>
@@ -26,7 +26,11 @@
       <a-layout-content
           :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
       >
-        <a-list item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}"
+        <div class="welcome" v-show="isShowWelcome">
+          <h1>欢迎光临NoahWiki</h1>
+        </div>
+
+        <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3}"
                 :data-source="music">
           <template #renderItem="{ item }">
             <a-list-item key="item.name">
@@ -42,8 +46,8 @@
                   <a :href="item.href">{{ item.name }}</a>
                 </template>
                 <template #avatar>
-                  <a-avatar shape="square" size="large" >
-                    {{item.cover}}
+                  <a-avatar shape="square" size="large">
+                    {{ item.cover }}
                   </a-avatar>
                 </template>
               </a-list-item-meta>
@@ -74,7 +78,7 @@ export default defineComponent({
       {type: 'MessageOutlined', text: '2'},
     ];
 
-    const level1 =  ref();
+    const level1 = ref();
     let categorys: any;
     /**
      * 查询所有分类
@@ -105,6 +109,33 @@ export default defineComponent({
       });
     };
 
+    const handleQueryMusic = () => {
+      axios.get("/music/list", {
+        params: {
+          page: 1,
+          size: 20,
+          categoryId2: categoryId2,
+        }
+      }).then((response)=>{
+        const data=response.data;
+        music.value=data.content.list;
+      });
+    };
+
+    const isShowWelcome = ref(true);
+    let categoryId2 = 0;
+
+    const handleClick = (value: any) => {
+      console.log("click menu")
+      if (value.key === 'welcome') {
+        isShowWelcome.value = true;
+      } else {
+        categoryId2 = value.key;
+        isShowWelcome.value = false;
+        handleQueryMusic();
+      }
+    };
+
     onMounted(() => {
       handleQueryCategory();
 
@@ -114,6 +145,9 @@ export default defineComponent({
       music,
       level1,
       actions,
+      isShowWelcome,
+
+      handleClick,
     };
 
   }
