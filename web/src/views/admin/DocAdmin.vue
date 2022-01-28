@@ -98,10 +98,12 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import {useRoute} from "vue-router";
 
 export default defineComponent({
   name: 'AdminDoc',
   setup() {
+    const route = useRoute();
     const docs = ref();
     const level1 = ref();
     const param = ref();
@@ -173,7 +175,6 @@ export default defineComponent({
     const setDisable = (treeSelectData: any, id: any) => {
       for (let i = 0; i < treeSelectData.length; i++) {
         const node = treeSelectData[i];
-        console.log(1);
         if (node.id === id) {
           node.disabled = true;
 
@@ -181,15 +182,13 @@ export default defineComponent({
           if (Tool.isNotEmpty(children)) {
             for (let j = 0; j < children.length; j++) {
               setDisable(children, children[j].id)
-              console.log(2);
             }
           }
+
         } else {
           const children = node.children;
           if (Tool.isNotEmpty(children)) {
             setDisable(children, id);
-            console.log(3);
-
           }
         }
       }
@@ -209,7 +208,9 @@ export default defineComponent({
     //新增
     const add = () => {
       modalVisible.value = true;
-      doc.value = {};
+      doc.value = {
+        musicId: route.query.musicId
+      };
 
       treeSelectData.value = Tool.copy(level1.value);
 
