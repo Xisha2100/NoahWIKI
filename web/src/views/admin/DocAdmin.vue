@@ -69,6 +69,18 @@
       <a-form-item label="名称">
         <a-input v-model:value="doc.name"/>
       </a-form-item>
+      <a-form-item label="父文档">
+        <a-tree-select
+            v-model:value="doc.parent"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            placeholder="请选择父文档"
+            tree-default-expand-all
+            :tree-data="level1"
+            :replaceFields="{label: 'name',key: 'id',value: 'id' ,children: 'children'}"
+        >
+        </a-tree-select>
+      </a-form-item>
 
       <a-form-item label="父文档">
         <!--        <a-input v-model:value="doc.parent"/>-->
