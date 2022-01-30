@@ -137,3 +137,11 @@ insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES
 insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (4, 1,3, '文档2.1',1,0,0);
 insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (5, 1,3, '文档2.2',2,0,0);
 insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (6, 1,5, '文档2.2.1',1,0,0);
+
+
+drop table if exists `content`;
+CREATE TABLE `content`  (
+                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '文档id',
+                                    `content` mediumtext NOT NULL COMMENT '内容',
+                                    PRIMARY KEY (`id`)
+)ENGINE = InnoDB CHARACTER SET = utf8mb4 comment '文档内容';
