@@ -83,13 +83,17 @@
         </a-tree-select>
       </a-form-item>
 
-
       <a-form-item label="顺序">
         <a-input v-model:value="doc.sort"/>
       </a-form-item>
 
+      <a-form-item label="内容">
+        <div id='editor'></div>
+      </a-form-item>
+
     </a-form>
   </a-modal>
+
 </template>
 
 
@@ -99,6 +103,7 @@ import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
+import E from 'wangeditor';
 
 export default defineComponent({
   name: 'AdminDoc',
@@ -133,7 +138,7 @@ export default defineComponent({
 
     const handleQuery = () => {
       loading.value = true;
-      level1.value=[];
+      level1.value = [];
       axios.get("doc/all").then((response) => {
         loading.value = false;
         const data = response.data;
@@ -156,6 +161,9 @@ export default defineComponent({
     const doc = ref();
     const modalVisible = ref(false);
     const modalLoading = ref(false);
+
+
+
     const handleModalOk = () => {
       modalLoading.value = true;
       //保存更新
@@ -198,12 +206,15 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
-
       //不允许选择当前节点和其子节点作为父节点，会让树断开
+
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
-
       treeSelectData.value.unshift({id: 0, name: '无'});
+      const editor = new E("#editor");
+      setTimeout(function () {
+        editor.create();
+      }, 100);
     };
     //新增
     const add = () => {
@@ -211,15 +222,19 @@ export default defineComponent({
       doc.value = {
         musicId: route.query.musicId
       };
-
       treeSelectData.value = Tool.copy(level1.value);
 
       treeSelectData.value.unshift({id: 0, name: '无'});
+      const editor = new E("#editor");
+
+      setTimeout(function () {
+        editor.create();
+      }, 100);
 
     };
     //删除
     const deleteDoc = (id: number) => {
-      getDeleteIds(level1.value,id);
+      getDeleteIds(level1.value, id);
       axios.delete("doc/delete/" + ids.join(",")).then((response) => {
         const data = response.data;
         if (data.success) {
@@ -229,7 +244,7 @@ export default defineComponent({
       });
     };
 
-    const ids:Array<string>=[];
+    const ids: Array<string> = [];
     const getDeleteIds = (treeSelectData: any, id: any) => {
       for (let i = 0; i < treeSelectData.length; i++) {
         const node = treeSelectData[i];
