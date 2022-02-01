@@ -5,94 +5,95 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      <p>
-        <a-form layout="inline" :model="param">
-          <a-form-item>
-            <a-button type="primary" @click="handleQuery()">
-              刷新
-            </a-button>
-          </a-form-item>
-          <a-form-item>
-            <a-button type="primary" @click="add()">
-              新增
-            </a-button>
-          </a-form-item>
-        </a-form>
-      </p>
-      <a-table
-          :columns="columns"
-          :row-key="record => record.id"
-          :data-source="level1"
-          :loading="loading"
-          :pagination="false"
-      >
-        <template #cover="{text:cover}">
-          <a-avatar shape="square" size="large" style="background-color: #87d068">
-            {{ cover }}
-          </a-avatar>
-          <!--          <img v-if="cover" :src="cover" alt="avatar" />-->
-        </template>
 
-        <template v-slot:action="{text,record}">
-          <a-space size="small">
-            <a-button type="primary" @click="edit(record)">
-              编辑
-            </a-button>
-            <a-popconfirm
-                title="删除后不可恢复，请再次确认"
-                ok-text="是"
-                cancel-text="否"
-                @confirm="deleteDoc(record.id)"
-            >
-              <a-button type="danger">
-                删除
-              </a-button>
-            </a-popconfirm>
-          </a-space>
-        </template>
-      </a-table>
+      <a-row>
+        <a-col :span="8">
+          <p>
+            <a-form layout="inline" :model="param">
+              <a-form-item>
+                <a-button type="primary" @click="handleQuery()">
+                  刷新
+                </a-button>
+              </a-form-item>
+              <a-form-item>
+                <a-button type="primary" @click="add()">
+                  新增
+                </a-button>
+              </a-form-item>
+            </a-form>
+          </p>
+          <a-table
+              :columns="columns"
+              :row-key="record => record.id"
+              :data-source="level1"
+              :loading="loading"
+              :pagination="false"
+          >
+            <template #cover="{text:cover}">
+              <a-avatar shape="square" size="large" style="background-color: #87d068">
+                {{ cover }}
+              </a-avatar>
+              <!--          <img v-if="cover" :src="cover" alt="avatar" />-->
+            </template>
+
+            <template v-slot:action="{text,record}">
+              <a-space size="small">
+                <a-button type="primary" @click="edit(record)">
+                  编辑
+                </a-button>
+                <a-popconfirm
+                    title="删除后不可恢复，请再次确认"
+                    ok-text="是"
+                    cancel-text="否"
+                    @confirm="deleteDoc(record.id)"
+                >
+                  <a-button type="danger">
+                    删除
+                  </a-button>
+                </a-popconfirm>
+              </a-space>
+            </template>
+          </a-table>
+        </a-col>
+        <a-col :span="16">
+          <a-form
+              :model="doc"
+
+          >
+
+            <a-form-item label="名称">
+              <a-input v-model:value="doc.name"/>
+            </a-form-item>
+
+            <a-form-item label="父文档">
+              <a-tree-select
+                  v-model:value="doc.parent"
+                  style="width: 100%"
+                  :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                  placeholder="请选择父文档"
+                  tree-default-expand-all
+                  :tree-data="treeSelectData"
+                  :fieldNames="{label: 'name',key: 'id',value: 'id' }"
+              >
+              </a-tree-select>
+            </a-form-item>
+
+            <a-form-item label="顺序">
+              <a-input v-model:value="doc.sort"/>
+            </a-form-item>
+
+            <a-form-item label="内容">
+              <div id='editor'></div>
+            </a-form-item>
+
+          </a-form>
+        </a-col>
+      </a-row>
+
+
     </a-layout-content>
   </a-layout>
 
-  <a-modal
-      v-model:visible="modalVisible"
-      title="文档表单"
-      :confirm-loading="confirmModalLoading"
-      @ok="handleModalOk"
-  >
-    <a-form
-        :model="doc"
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 18 }"
-    >
-
-      <a-form-item label="名称">
-        <a-input v-model:value="doc.name"/>
-      </a-form-item>
-
-      <a-form-item label="父文档">
-        <a-tree-select
-            v-model:value="doc.parent"
-            style="width: 100%"
-            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-            placeholder="请选择父文档"
-            tree-default-expand-all
-            :tree-data="treeSelectData"
-            :fieldNames="{label: 'name',key: 'id',value: 'id' }"
-        >
-        </a-tree-select>
-      </a-form-item>
-
-      <a-form-item label="顺序">
-        <a-input v-model:value="doc.sort"/>
-      </a-form-item>
-
-      <a-form-item label="内容">
-        <div id='editor'></div>
-      </a-form-item>
-
-    </a-form>
-  </a-modal>
 
 </template>
 
@@ -163,7 +164,6 @@ export default defineComponent({
     const modalLoading = ref(false);
 
 
-
     const handleModalOk = () => {
       modalLoading.value = true;
       //保存更新
@@ -216,80 +216,79 @@ export default defineComponent({
         editor.create();
       }, 100);
     };
-    //新增
-    const add = () => {
-      modalVisible.value = true;
-      doc.value = {
-        musicId: route.query.musicId
+      //新增
+      const add = () => {
+        modalVisible.value = true;
+        doc.value = {
+          musicId: route.query.musicId
+        };
+        treeSelectData.value = Tool.copy(level1.value);
+
+        treeSelectData.value.unshift({id: 0, name: '无'});
+        const editor = new E("#editor");
+        setTimeout(function () {
+          editor.create();
+        }, 100);
       };
-      treeSelectData.value = Tool.copy(level1.value);
+      //删除
+      const deleteDoc = (id: number) => {
+        getDeleteIds(level1.value, id);
+        axios.delete("doc/delete/" + ids.join(",")).then((response) => {
+          const data = response.data;
+          if (data.success) {
+            //重新加载
+            handleQuery();
+          }
+        });
+      };
 
-      treeSelectData.value.unshift({id: 0, name: '无'});
-      const editor = new E("#editor");
+      const ids: Array<string> = [];
+      const getDeleteIds = (treeSelectData: any, id: any) => {
+        for (let i = 0; i < treeSelectData.length; i++) {
+          const node = treeSelectData[i];
+          if (node.id === id) {
+            ids.push(node.id);
 
-      setTimeout(function () {
-        editor.create();
-      }, 100);
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              for (let j = 0; j < children.length; j++) {
+                getDeleteIds(children, children[j].id)
+              }
+            }
 
-    };
-    //删除
-    const deleteDoc = (id: number) => {
-      getDeleteIds(level1.value, id);
-      axios.delete("doc/delete/" + ids.join(",")).then((response) => {
-        const data = response.data;
-        if (data.success) {
-          //重新加载
-          handleQuery();
-        }
-      });
-    };
-
-    const ids: Array<string> = [];
-    const getDeleteIds = (treeSelectData: any, id: any) => {
-      for (let i = 0; i < treeSelectData.length; i++) {
-        const node = treeSelectData[i];
-        if (node.id === id) {
-          ids.push(node.id);
-
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            for (let j = 0; j < children.length; j++) {
-              getDeleteIds(children, children[j].id)
+          } else {
+            const children = node.children;
+            if (Tool.isNotEmpty(children)) {
+              getDeleteIds(children, id);
             }
           }
-
-        } else {
-          const children = node.children;
-          if (Tool.isNotEmpty(children)) {
-            getDeleteIds(children, id);
-          }
         }
-      }
-    };
+      };
 
-    onMounted(() => {
-      handleQuery();
-    });
+      onMounted(() => {
+        handleQuery();
 
-    return {
-      param,
-      // docs,
-      level1,
-      columns,
-      loading,
-      handleQuery,
+      });
 
-      edit,
-      add,
-      deleteDoc,
+      return {
+        param,
+        // docs,
+        level1,
+        columns,
+        loading,
+        handleQuery,
 
-      treeSelectData,
-      doc,
-      modalVisible,
-      modalLoading,
-      handleModalOk
-    };
+        edit,
+        add,
+        deleteDoc,
 
-  }
-});
+        treeSelectData,
+        doc,
+        modalVisible,
+        modalLoading,
+        handleModalOk
+      };
+
+    }
+  });
 </script>
