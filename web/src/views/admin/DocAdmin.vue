@@ -6,7 +6,7 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
 
-      <a-row>
+      <a-row :gutter="24">
         <a-col :span="8">
           <p>
             <a-form layout="inline" :model="param">
@@ -28,17 +28,16 @@
               :data-source="level1"
               :loading="loading"
               :pagination="false"
+              size="small"
           >
-            <template #cover="{text:cover}">
-              <a-avatar shape="square" size="large" style="background-color: #87d068">
-                {{ cover }}
-              </a-avatar>
+            <template #name="{text,record}">
+              {{ record.sort }} {{ text }}
               <!--          <img v-if="cover" :src="cover" alt="avatar" />-->
             </template>
 
             <template v-slot:action="{text,record}">
               <a-space size="small">
-                <a-button type="primary" @click="edit(record)">
+                <a-button type="primary" @click="edit(record)" size="small">
                   编辑
                 </a-button>
                 <a-popconfirm
@@ -47,7 +46,7 @@
                     cancel-text="否"
                     @confirm="deleteDoc(record.id)"
                 >
-                  <a-button type="danger">
+                  <a-button type="danger" size="small">
                     删除
                   </a-button>
                 </a-popconfirm>
@@ -55,17 +54,25 @@
             </template>
           </a-table>
         </a-col>
+
         <a-col :span="16">
+          <p>
+            <a-form-item>
+              <a-button type="primary" @click="handleSave()">
+                保存
+              </a-button>
+            </a-form-item>
+          </p>
           <a-form
               :model="doc"
-
+              layout="vertical"
           >
 
-            <a-form-item label="名称">
-              <a-input v-model:value="doc.name"/>
+            <a-form-item>
+              <a-input v-model:value="doc.name" :placeholder="名称"/>
             </a-form-item>
 
-            <a-form-item label="父文档">
+            <a-form-item>
               <a-tree-select
                   v-model:value="doc.parent"
                   style="width: 100%"
@@ -78,8 +85,8 @@
               </a-tree-select>
             </a-form-item>
 
-            <a-form-item label="顺序">
-              <a-input v-model:value="doc.sort"/>
+            <a-form-item>
+              <a-input v-model:value="doc.sort" placeholder="顺序"/>
             </a-form-item>
 
             <a-form-item label="内容">
@@ -104,7 +111,7 @@ import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
 import {useRoute} from "vue-router";
-import E from 'wangeditor';
+import E from 'wangeditor'
 
 export default defineComponent({
   name: 'AdminDoc',
@@ -119,16 +126,8 @@ export default defineComponent({
     const columns = [
       {
         title: '名称',
-        dataIndex: 'name'
-      },
-      {
-        title: '父文档',
-        key: 'parent',
-        dataIndex: 'parent'
-      },
-      {
-        title: '顺序',
-        dataIndex: 'sort'
+        dataIndex: 'name',
+        slots: {customRender: 'name'}
       },
       {
         title: '操作',
@@ -160,11 +159,13 @@ export default defineComponent({
     const treeSelectData = ref();
     treeSelectData.value = [];
     const doc = ref();
+    doc.value={};
+
     const modalVisible = ref(false);
     const modalLoading = ref(false);
 
 
-    const handleModalOk = () => {
+    const handleSave = () => {
       modalLoading.value = true;
       //保存更新
       axios.post("doc/save", doc.value).then((response) => {
@@ -212,83 +213,81 @@ export default defineComponent({
       setDisable(treeSelectData.value, record.id);
       treeSelectData.value.unshift({id: 0, name: '无'});
       const editor = new E("#editor");
-      setTimeout(function () {
-        editor.create();
-      }, 100);
+      editor.config.zIndex = 0;
+      editor.create();
     };
-      //新增
-      const add = () => {
-        modalVisible.value = true;
-        doc.value = {
-          musicId: route.query.musicId
-        };
-        treeSelectData.value = Tool.copy(level1.value);
-
-        treeSelectData.value.unshift({id: 0, name: '无'});
-        const editor = new E("#editor");
-        setTimeout(function () {
-          editor.create();
-        }, 100);
+    //新增
+    const add = () => {
+      modalVisible.value = true;
+      doc.value = {
+        musicId: route.query.musicId
       };
-      //删除
-      const deleteDoc = (id: number) => {
-        getDeleteIds(level1.value, id);
-        axios.delete("doc/delete/" + ids.join(",")).then((response) => {
-          const data = response.data;
-          if (data.success) {
-            //重新加载
-            handleQuery();
+      treeSelectData.value = Tool.copy(level1.value);
+
+      treeSelectData.value.unshift({id: 0, name: '无'});
+      const editor = new E("#editor");
+      editor.config.zIndex = 0;
+      editor.create();
+    };
+    //删除
+    const deleteDoc = (id: number) => {
+      getDeleteIds(level1.value, id);
+      axios.delete("doc/delete/" + ids.join(",")).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          //重新加载
+          handleQuery();
+        }
+      });
+    };
+
+    const ids: Array<string> = [];
+    const getDeleteIds = (treeSelectData: any, id: any) => {
+      for (let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if (node.id === id) {
+          ids.push(node.id);
+
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            for (let j = 0; j < children.length; j++) {
+              getDeleteIds(children, children[j].id)
+            }
           }
-        });
-      };
 
-      const ids: Array<string> = [];
-      const getDeleteIds = (treeSelectData: any, id: any) => {
-        for (let i = 0; i < treeSelectData.length; i++) {
-          const node = treeSelectData[i];
-          if (node.id === id) {
-            ids.push(node.id);
-
-            const children = node.children;
-            if (Tool.isNotEmpty(children)) {
-              for (let j = 0; j < children.length; j++) {
-                getDeleteIds(children, children[j].id)
-              }
-            }
-
-          } else {
-            const children = node.children;
-            if (Tool.isNotEmpty(children)) {
-              getDeleteIds(children, id);
-            }
+        } else {
+          const children = node.children;
+          if (Tool.isNotEmpty(children)) {
+            getDeleteIds(children, id);
           }
         }
-      };
+      }
+    };
 
-      onMounted(() => {
-        handleQuery();
+    onMounted(() => {
+      handleQuery();
 
-      });
+    });
 
-      return {
-        param,
-        // docs,
-        level1,
-        columns,
-        loading,
-        handleQuery,
+    return {
+      param,
+      // docs,
+      level1,
+      columns,
+      loading,
+      handleQuery,
 
-        edit,
-        add,
-        deleteDoc,
+      edit,
+      add,
+      deleteDoc,
 
-        treeSelectData,
-        doc,
-        modalVisible,
-        modalLoading,
-        handleModalOk
-      };
+      treeSelectData,
+      doc,
+      modalVisible,
+      modalLoading,
+      handleSave
+    };
 
-    }
-  });
+  }
+});
 </script>
