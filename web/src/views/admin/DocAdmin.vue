@@ -23,12 +23,14 @@
             </a-form>
           </p>
           <a-table
+              v-if="level1.length > 0 "
               :columns="columns"
               :row-key="record => record.id"
               :data-source="level1"
               :loading="loading"
               :pagination="false"
               size="small"
+              :defaultExpandAllRows="true"
           >
             <template #name="{text,record}">
               {{ record.sort }} {{ text }}
@@ -119,6 +121,7 @@ export default defineComponent({
     const route = useRoute();
     const docs = ref();
     const level1 = ref();
+    level1.value=[];
     const param = ref();
     param.value = {};
     // const ebooks1 = reactive({books: []});
