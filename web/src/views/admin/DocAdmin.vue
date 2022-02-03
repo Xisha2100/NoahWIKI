@@ -167,9 +167,13 @@ export default defineComponent({
     const modalVisible = ref(false);
     const modalLoading = ref(false);
 
+    const editor = ref();
+    // editor.config.zIndex = 0;
+    // editor.create();
 
     const handleSave = () => {
       modalLoading.value = true;
+      doc.value.content=editor.value.txt.html();
       //保存更新
       axios.post("doc/save", doc.value).then((response) => {
         modalLoading.value = false;
@@ -215,9 +219,9 @@ export default defineComponent({
       treeSelectData.value = Tool.copy(level1.value);
       setDisable(treeSelectData.value, record.id);
       treeSelectData.value.unshift({id: 0, name: '无'});
-      const editor = new E("#editor");
-      editor.config.zIndex = 0;
-      editor.create();
+      // const editor = new E("#editor");
+      // editor.config.zIndex = 0;
+      // editor.create();
     };
     //新增
     const add = () => {
@@ -228,9 +232,9 @@ export default defineComponent({
       treeSelectData.value = Tool.copy(level1.value);
 
       treeSelectData.value.unshift({id: 0, name: '无'});
-      const editor = new E("#editor");
-      editor.config.zIndex = 0;
-      editor.create();
+      // const editor = new E("#editor");
+      // editor.config.zIndex = 0;
+      // editor.create();
     };
     //删除
     const deleteDoc = (id: number) => {
@@ -269,7 +273,8 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
-
+      editor.value=new E("#editor");
+      editor.value.create();
     });
 
     return {

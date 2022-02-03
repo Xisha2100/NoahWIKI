@@ -8,8 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import top.nzhz.wiki.domain.Content;
 import top.nzhz.wiki.domain.Doc;
 import top.nzhz.wiki.domain.DocExample;
+import top.nzhz.wiki.mapper.ContentMapper;
 import top.nzhz.wiki.mapper.DocMapper;
 import top.nzhz.wiki.req.DocQueryReq;
 import top.nzhz.wiki.req.DocSaveReq;
@@ -26,6 +28,8 @@ public class DocService {
     @Resource
     private DocMapper docMapper;
 
+    @Resource
+    private ContentMapper contentMapper;
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
 
 
@@ -78,10 +82,18 @@ public class DocService {
     public void save(DocSaveReq req) {
         Doc doc = new Doc();
         BeanUtils.copyProperties(req, doc);
+        Content content = new Content();
+        BeanUtils.copyProperties(req,content);
         if (ObjectUtils.isEmpty(req.getId())) {
             docMapper.insert(doc);
+            content.setId(doc.getId());
+            contentMapper.insert(content);
         } else {
             docMapper.updateByPrimaryKey(doc);
+            int count=contentMapper.updateByPrimaryKeyWithBLOBs(content);
+            if(count==0) {
+                contentMapper.insert(content);
+            }
         }
     }
 
