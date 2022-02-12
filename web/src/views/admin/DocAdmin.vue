@@ -192,7 +192,7 @@ export default defineComponent({
         modalLoading.value = false;
         const data = response.data;
         if (data.success) {
-          modalVisible.value = false;
+          message.success("保存成功！")
           //重新加载
           handleQuery();
         } else {
@@ -225,6 +225,8 @@ export default defineComponent({
 
     //编辑
     const edit = (record: any) => {
+      // 清空文本框
+      editor.value.txt.html("");
       modalVisible.value = true;
       doc.value = Tool.copy(record);
 
@@ -240,6 +242,8 @@ export default defineComponent({
     };
     //新增
     const add = () => {
+      editor.value.txt.html("");
+
       modalVisible.value = true;
       doc.value = {
         musicId: route.query.musicId
@@ -289,6 +293,7 @@ export default defineComponent({
     onMounted(() => {
       handleQuery();
       editor.value=new E("#editor");
+      editor.value.config.zIndex = 0;
       editor.value.create();
     });
 
