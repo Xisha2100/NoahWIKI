@@ -139,6 +139,7 @@ export default defineComponent({
       }
     ];
 
+    //数据查询
     const handleQuery = () => {
       loading.value = true;
       level1.value = [];
@@ -158,6 +159,18 @@ export default defineComponent({
       });
     };
 
+    //内容查询
+    const handleQueryContent = () => {
+      axios.get("doc/find-content/"+doc.value.id).then((response) => {
+        const data = response.data;
+        if (data.success) {
+          editor.value.txt.html(data.content);
+          //重置分页组件
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
 // 表单内容
     const treeSelectData = ref();
     treeSelectData.value = [];
@@ -214,6 +227,8 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+
+      handleQueryContent();
       //不允许选择当前节点和其子节点作为父节点，会让树断开
 
       treeSelectData.value = Tool.copy(level1.value);
