@@ -94,9 +94,11 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
 
-          // if (Tool.isNotEmpty(level1)) {
-          //   defaultSelectedKeys.value = [level1.value[0].id];
-          //   handleQueryContent(level1.value[0].id);
+
+          if (Tool.isNotEmpty(level1)) {
+            defaultSelectedKeys.value = [level1.value[0].id];
+            handleQueryContent(level1.value[0].id);
+          }
           //   // 初始显示文档信息
           //   doc.value = level1.value[0];
           // }
@@ -136,7 +138,7 @@ export default defineComponent({
       level1,
       html,
       onSelect,
-      // defaultSelectedKeys,
+      defaultSelectedKeys,
       // doc,
       // vote
     }
