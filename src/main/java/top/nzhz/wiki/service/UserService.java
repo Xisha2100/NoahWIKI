@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import top.nzhz.wiki.domain.User;
 import top.nzhz.wiki.domain.UserExample;
@@ -81,15 +82,31 @@ public class UserService {
         User user = new User();
         BeanUtils.copyProperties(req, user);
         if (ObjectUtils.isEmpty(req.getId())) {
-            userMapper.insert(user);
+            if(ObjectUtils.isEmpty(selectByLoginName(req.getLoginName()))){
+                userMapper.insert(user);
+            }else {
+                //用户名已存在
+            }
         } else {
             userMapper.updateByPrimaryKey(user);
         }
     }
 
 
-    public void delete(Long id){
+    public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);
+    }
+
+    public User selectByLoginName(String loginName) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andLoginNameEqualTo(loginName);
+        List<User> userList=userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(userList)){
+            return null;
+        }else {
+            return userList.get(0);
+        }
     }
 }
 
