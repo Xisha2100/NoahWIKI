@@ -152,6 +152,8 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
 
+          treeSelectData.value=Tool.copy(level1.value);
+          treeSelectData.value.unshift({id:0,name:'无'});
           //重置分页组件
         } else {
           message.error(data.message);
@@ -186,6 +188,7 @@ export default defineComponent({
 
     const handleSave = () => {
       modalLoading.value = true;
+
       doc.value.content=editor.value.txt.html();
       //保存更新
       axios.post("doc/save", doc.value).then((response) => {
@@ -292,6 +295,7 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
+      doc.value.musicId=route.query.musicId;
       editor.value=new E("#editor");
       editor.value.config.zIndex = 0;
       editor.value.create();
