@@ -125,23 +125,44 @@ create table `doc`
     `parent`     bigint      not null default 0 comment '父id',
     `name`       varchar(50) not null comment '名称',
     `sort`       int comment '顺序',
-    `view_count` int default 0 comment '阅读数',
-    `vote_count` int default 0 comment '阅读数',
-        primary key (`id`)
+    `view_count` int                  default 0 comment '阅读数',
+    `vote_count` int                  default 0 comment '阅读数',
+    primary key (`id`)
 ) engine = innodb
   default charset = utf8mb4 comment '文档';
 
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (1, 1,0, '文档1',1,0,0);
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (2, 1,1, '文档1.1',1,0,0);
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (3, 1,0, '文档2',2,0,0);
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (4, 1,3, '文档2.1',1,0,0);
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (5, 1,3, '文档2.2',2,0,0);
-insert into `doc`(id, music_id, parent, name, sort,view_count,vote_count) VALUES (6, 1,5, '文档2.2.1',1,0,0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (1, 1, 0, '文档1', 1, 0, 0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (2, 1, 1, '文档1.1', 1, 0, 0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (3, 1, 0, '文档2', 2, 0, 0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (4, 1, 3, '文档2.1', 1, 0, 0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (5, 1, 3, '文档2.2', 2, 0, 0);
+insert into `doc`(id, music_id, parent, name, sort, view_count, vote_count)
+VALUES (6, 1, 5, '文档2.2.1', 1, 0, 0);
 
 
 drop table if exists `content`;
-CREATE TABLE `content`  (
-                                    `id` bigint NOT NULL AUTO_INCREMENT COMMENT '文档id',
-                                    `content` mediumtext NOT NULL COMMENT '内容',
-                                    PRIMARY KEY (`id`)
-)ENGINE = InnoDB CHARACTER SET = utf8mb4 comment '文档内容';
+CREATE TABLE `content`
+(
+    `id`      bigint     NOT NULL AUTO_INCREMENT COMMENT '文档id',
+    `content` mediumtext NOT NULL COMMENT '内容',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4 comment '文档内容';
+
+drop table if exists `user`;
+
+create table `user`
+(
+    `id`           bigint not null AUTO_INCREMENT comment 'id',
+    `login_name`         varchar(50) not null comment '登录名',
+    `name`       varchar(50)  comment '昵称',
+    `password` char(32) not null comment '密码',
+    primary key (`id`),
+    unique key `login_name_unique` (`login_name`)
+) engine = innodb
+  default charset = utf8mb4 comment ='用户';
