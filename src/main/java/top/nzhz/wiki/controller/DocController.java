@@ -36,10 +36,10 @@ public class DocController {
         return resp;
     }
 
-    @GetMapping("/all")
-    public CommonResp all() {
+    @GetMapping("/all/{musicId}")
+    public CommonResp all(@PathVariable Long musicId) {
         CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
-        List<DocQueryResp> list=docService.all();
+        List<DocQueryResp> list=docService.all(musicId);
         resp.setContent(list);
         return resp;
     }

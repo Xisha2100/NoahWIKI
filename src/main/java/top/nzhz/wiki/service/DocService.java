@@ -63,8 +63,9 @@ public class DocService {
         return pageResp;
     }
 
-    public List<DocQueryResp> all() {
+    public List<DocQueryResp> all(Long musicId) {
         DocExample docExample = new DocExample();
+        docExample.createCriteria().andMusicIdEqualTo(musicId);
         docExample.setOrderByClause("sort asc");
 
         List<Doc> docList = docMapper.selectByExample(docExample);

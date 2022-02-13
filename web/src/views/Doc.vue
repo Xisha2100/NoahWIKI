@@ -85,7 +85,7 @@ export default defineComponent({
      * 数据查询
      **/
     const handleQuery = () => {
-      axios.get("/doc/all/").then((response) => {
+      axios.get("/doc/all/" + route.query.musicId).then((response) => {
         const data = response.data;
         if (data.success) {
           docs.value = data.content;
