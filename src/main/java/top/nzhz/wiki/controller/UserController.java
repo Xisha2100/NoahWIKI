@@ -1,5 +1,6 @@
 package top.nzhz.wiki.controller;
 
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import top.nzhz.wiki.req.UserQueryReq;
 import top.nzhz.wiki.req.UserSaveReq;
@@ -37,6 +38,7 @@ public class UserController {
 
     @PostMapping("/save")
     public CommonResp save(@Valid @RequestBody UserSaveReq req) {//注意json需要加注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.save(req);
         return resp;
