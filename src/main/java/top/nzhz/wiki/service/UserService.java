@@ -11,6 +11,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import top.nzhz.wiki.domain.User;
 import top.nzhz.wiki.domain.UserExample;
+import top.nzhz.wiki.exception.BusinessException;
+import top.nzhz.wiki.exception.BusinessExceptionCode;
 import top.nzhz.wiki.mapper.UserMapper;
 import top.nzhz.wiki.req.UserQueryReq;
 import top.nzhz.wiki.req.UserSaveReq;
@@ -86,6 +88,7 @@ public class UserService {
                 userMapper.insert(user);
             }else {
                 //用户名已存在
+                throw new BusinessException(BusinessExceptionCode.USER_LOGIN_NAME_EXIST);
             }
         } else {
             userMapper.updateByPrimaryKey(user);
