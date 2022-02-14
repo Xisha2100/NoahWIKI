@@ -77,7 +77,7 @@
 
 
       <a-form-item label="登录名">
-        <a-input v-model:value="user.loginName" :disabled="user.id"/>
+        <a-input v-model:value="user.loginName" :disabled="!!user.id"/>
       </a-form-item>
 
       <a-form-item label="昵称">
