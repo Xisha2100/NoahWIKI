@@ -1,16 +1,27 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Noah Wiki @ nzhz.top
+    Noah Wiki @ nzhz.top 用户{{ user.name }}
   </a-layout-footer>
 </template>
 
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent, computed} from 'vue';
+import store from "@/store";
 
 export default defineComponent({
   name: "the-footer",
 
+  setup() {
+    const user = computed(() =>
+        store.state.user
+    );
+
+    return {
+      user,
+    }
+
+  }
 });
 </script>
 
