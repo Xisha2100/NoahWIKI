@@ -1,6 +1,10 @@
 <template>
 
   <a-layout-header class="header">
+
+    <a class="login-menu" @click="logout" v-show="!!user.id">
+      <span>退出登录</span>
+    </a>
     <a class="login-menu" @click="showLoginModal" v-show="!user.id">
       <span>登录</span>
     </a>
@@ -83,6 +87,7 @@ export default defineComponent({
       loginModalVisible.value = true;
     };
 
+    //登录
     const login = () => {
       console.log("开始登录");
       loginModalLoading.value = true;
@@ -100,13 +105,29 @@ export default defineComponent({
       });
     };
 
+    //退出登录
+    const logout = () => {
+      console.log("退出登录");
+      axios.get('/user/logout/'+ user.value.token).then((response) => {
+        loginModalLoading.value = false;
+        const data = response.data;
+        if (data.success) {
+          message.success("退出成功！");
+          store.commit("setUser", {});
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
     return {
       loginModalVisible,
       loginModalLoading,
       showLoginModal,
       loginUser,
       login,
-      user
+      logout,
+      user,
     }
   }
 });
@@ -116,5 +137,6 @@ export default defineComponent({
 .login-menu {
   float: right;
   color: white;
+  padding-left: 10px;
 }
 </style>
