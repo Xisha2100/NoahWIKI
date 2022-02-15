@@ -1,3 +1,11 @@
+GET http://localhost:8080/redis/get/143
+Accept: application/json
+###
+
+GET http://localhost:8080/redis/set/143/te
+Accept: application/json
+###
+
 #可以直接用http client 在Tools里
 GET http://localhost:8080/music/list?page=2&size=4
 Accept: application/json
