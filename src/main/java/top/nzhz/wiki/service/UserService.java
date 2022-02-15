@@ -15,6 +15,7 @@ import top.nzhz.wiki.exception.BusinessException;
 import top.nzhz.wiki.exception.BusinessExceptionCode;
 import top.nzhz.wiki.mapper.UserMapper;
 import top.nzhz.wiki.req.UserQueryReq;
+import top.nzhz.wiki.req.UserResetPasswordReq;
 import top.nzhz.wiki.req.UserSaveReq;
 import top.nzhz.wiki.resp.PageResp;
 import top.nzhz.wiki.resp.UserQueryResp;
@@ -95,6 +96,11 @@ public class UserService {
             user.setPassword(null);
             userMapper.updateByPrimaryKeySelective(user);
         }
+    }
+    public void resetPassword(UserResetPasswordReq req) {
+        User user = new User();
+        BeanUtils.copyProperties(req, user);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 

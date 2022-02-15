@@ -3,6 +3,7 @@ package top.nzhz.wiki.controller;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import top.nzhz.wiki.req.UserQueryReq;
+import top.nzhz.wiki.req.UserResetPasswordReq;
 import top.nzhz.wiki.req.UserSaveReq;
 import top.nzhz.wiki.resp.CommonResp;
 import top.nzhz.wiki.resp.PageResp;
@@ -44,11 +45,21 @@ public class UserController {
         return resp;
     }
 
+    @PostMapping("/reset-password")
+    public CommonResp resetPassword(@Valid @RequestBody UserResetPasswordReq req) {//注意json需要加注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp resp = new CommonResp<>();
+        userService.resetPassword(req);
+        return resp;
+    }
+
     @DeleteMapping("/delete/{id}")
     public CommonResp delete(@PathVariable Long id) {//注意json需要加注解
         CommonResp resp = new CommonResp<>();
         userService.delete(id);
         return resp;
     }
+
+
 
 }
