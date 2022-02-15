@@ -14,10 +14,12 @@ import top.nzhz.wiki.domain.UserExample;
 import top.nzhz.wiki.exception.BusinessException;
 import top.nzhz.wiki.exception.BusinessExceptionCode;
 import top.nzhz.wiki.mapper.UserMapper;
+import top.nzhz.wiki.req.UserLoginReq;
 import top.nzhz.wiki.req.UserQueryReq;
 import top.nzhz.wiki.req.UserResetPasswordReq;
 import top.nzhz.wiki.req.UserSaveReq;
 import top.nzhz.wiki.resp.PageResp;
+import top.nzhz.wiki.resp.UserLoginResp;
 import top.nzhz.wiki.resp.UserQueryResp;
 
 import javax.annotation.Resource;
@@ -97,12 +99,32 @@ public class UserService {
             userMapper.updateByPrimaryKeySelective(user);
         }
     }
+
     public void resetPassword(UserResetPasswordReq req) {
         User user = new User();
         BeanUtils.copyProperties(req, user);
         userMapper.updateByPrimaryKeySelective(user);
     }
 
+    public UserLoginResp login(UserLoginReq req) {
+        User userFromDb = selectByLoginName(req.getLoginName());
+        if(ObjectUtils.isEmpty(userFromDb)){
+            //用户名不存在
+            LOG.info("用户名不存在,{}",req.getLoginName());
+            throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+        }else {
+            if(userFromDb.getPassword().equals(req.getPassword())){
+                //登陆成功
+                UserLoginResp userLoginResp=new UserLoginResp();
+                BeanUtils.copyProperties(userFromDb,userLoginResp);
+                return userLoginResp;
+            }else {
+                //登陆失败
+                LOG.info("密码不对,输入密码{},正确密码",req.getPassword(),userFromDb.getPassword());
+                throw new BusinessException(BusinessExceptionCode.LOGIN_USER_ERROR);
+            }
+        }
+    }
 
     public void delete(Long id) {
         userMapper.deleteByPrimaryKey(id);

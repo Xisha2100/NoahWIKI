@@ -2,11 +2,13 @@ package top.nzhz.wiki.controller;
 
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import top.nzhz.wiki.req.UserLoginReq;
 import top.nzhz.wiki.req.UserQueryReq;
 import top.nzhz.wiki.req.UserResetPasswordReq;
 import top.nzhz.wiki.req.UserSaveReq;
 import top.nzhz.wiki.resp.CommonResp;
 import top.nzhz.wiki.resp.PageResp;
+import top.nzhz.wiki.resp.UserLoginResp;
 import top.nzhz.wiki.resp.UserQueryResp;
 import top.nzhz.wiki.service.UserService;
 
@@ -50,6 +52,15 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp resp = new CommonResp<>();
         userService.resetPassword(req);
+        return resp;
+    }
+
+    @PostMapping("/login")
+    public CommonResp login(@Valid @RequestBody UserLoginReq req) {//注意json需要加注解
+        req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
+        CommonResp<UserLoginResp> resp = new CommonResp<>();
+        UserLoginResp userLoginResp=userService.login(req);
+        resp.setContent(userLoginResp);
         return resp;
     }
 
