@@ -1,5 +1,7 @@
 package top.nzhz.wiki.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import top.nzhz.wiki.req.UserLoginReq;
@@ -11,10 +13,12 @@ import top.nzhz.wiki.resp.PageResp;
 import top.nzhz.wiki.resp.UserLoginResp;
 import top.nzhz.wiki.resp.UserQueryResp;
 import top.nzhz.wiki.service.UserService;
+import top.nzhz.wiki.utils.SnowFlake;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -22,6 +26,12 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     @GetMapping("/list")
     public CommonResp list(@Valid UserQueryReq req) {
@@ -60,6 +70,12 @@ public class UserController {
         req.setPassword(DigestUtils.md5DigestAsHex(req.getPassword().getBytes()));
         CommonResp<UserLoginResp> resp = new CommonResp<>();
         UserLoginResp userLoginResp=userService.login(req);
+
+        //生成token并放入redis
+        Long token=snowFlake.nextId();
+        userLoginResp.setToken(token.toString());
+        redisTemplate.opsForValue().set(token, JSONObject.toJSONString(userLoginResp),3600*1, TimeUnit.SECONDS);
+
         resp.setContent(userLoginResp);
         return resp;
     }
