@@ -13,6 +13,7 @@ import top.nzhz.wiki.domain.Doc;
 import top.nzhz.wiki.domain.DocExample;
 import top.nzhz.wiki.mapper.ContentMapper;
 import top.nzhz.wiki.mapper.DocMapper;
+import top.nzhz.wiki.mapper.MyDocMapper;
 import top.nzhz.wiki.req.DocQueryReq;
 import top.nzhz.wiki.req.DocSaveReq;
 import top.nzhz.wiki.resp.DocQueryResp;
@@ -27,6 +28,9 @@ public class DocService {
     //    @Autowired
     @Resource
     private DocMapper docMapper;
+
+    @Resource
+    private MyDocMapper myDocMapper;
 
     @Resource
     private ContentMapper contentMapper;
@@ -83,6 +87,8 @@ public class DocService {
     public void save(DocSaveReq req) {
         Doc doc = new Doc();
         BeanUtils.copyProperties(req, doc);
+        doc.setViewCount(0);
+        doc.setVoteCount(0);
         Content content = new Content();
         BeanUtils.copyProperties(req,content);
         if (ObjectUtils.isEmpty(req.getId())) {
@@ -112,6 +118,8 @@ public class DocService {
 
     public String findContent(Long id){
         Content content=contentMapper.selectByPrimaryKey(id);
+        //文档阅读+1
+        myDocMapper.increaseViewCount(id);
         if(ObjectUtils.isEmpty(content)){
             return "";
         }
