@@ -1,19 +1,29 @@
-//package top.nzhz.wiki.config;
-//
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-//import top.nzhz.wiki.interceptor.LogInterceptor;
-//
-//import javax.annotation.Resource;
-//
-//@Configuration
-//public class SpringMvcConfig implements WebMvcConfigurer {
-//
-//    @Resource
-//    LogInterceptor logInterceptor;
-//
-//    public void addInterceptors(InterceptorRegistry registry){
-//        registry.addInterceptor(logInterceptor).addPathPatterns("/**").excludePathPatterns("/login");
-//    }
-//}
+package top.nzhz.wiki.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import top.nzhz.wiki.interceptor.LoginInterceptor;
+
+import javax.annotation.Resource;
+
+@Configuration
+public class SpringMvcConfig implements WebMvcConfigurer {
+
+    @Resource
+    LoginInterceptor loginInterceptor;
+
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(loginInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns(
+                        "/test/**",
+                        "/user/login",
+                        "/category/all",
+                        "/music/**",
+                        "/login",
+                        "/doc/all/**",
+                        "/doc/find-content/**"
+                        );
+    }
+}
