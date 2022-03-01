@@ -125,5 +125,10 @@ public class DocService {
         }
         return content.getContent();
     }
+
+    public void vote(Long id){
+        //点赞数+1
+        myDocMapper.increaseVoteCount(id);
+    }
 }
 
