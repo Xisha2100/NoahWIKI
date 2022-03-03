@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import top.nzhz.wiki.utils.RequestContext;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -48,6 +49,8 @@ public class LogAspect {
         LOG.info("请求地址: {} {}", request.getRequestURL().toString(), request.getMethod());
         LOG.info("类名方法: {}.{}", signature.getDeclaringTypeName(), name);
         LOG.info("远程地址: {}", request.getRemoteAddr());
+
+        RequestContext.setRemoteAddr(getRemoteIp(request));
 
         // 打印请求参数
         Object[] args = joinPoint.getArgs();
@@ -89,18 +92,18 @@ public class LogAspect {
      * @param request
      * @return
      */
-//    public String getRemoteIp(HttpServletRequest request) {
-//        String ip = request.getHeader("x-forwarded-for");
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getHeader("WL-Proxy-Client-IP");
-//        }
-//        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//            ip = request.getRemoteAddr();
-//        }
-//        return ip;
-//    }
+    public String getRemoteIp(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
+    }
 
 }

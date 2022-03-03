@@ -11,6 +11,8 @@ import org.springframework.util.ObjectUtils;
 import top.nzhz.wiki.domain.Content;
 import top.nzhz.wiki.domain.Doc;
 import top.nzhz.wiki.domain.DocExample;
+import top.nzhz.wiki.exception.BusinessException;
+import top.nzhz.wiki.exception.BusinessExceptionCode;
 import top.nzhz.wiki.mapper.ContentMapper;
 import top.nzhz.wiki.mapper.DocMapper;
 import top.nzhz.wiki.mapper.MyDocMapper;
@@ -18,6 +20,8 @@ import top.nzhz.wiki.req.DocQueryReq;
 import top.nzhz.wiki.req.DocSaveReq;
 import top.nzhz.wiki.resp.DocQueryResp;
 import top.nzhz.wiki.resp.PageResp;
+import top.nzhz.wiki.utils.RedisUtil;
+import top.nzhz.wiki.utils.RequestContext;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -34,6 +38,10 @@ public class DocService {
 
     @Resource
     private ContentMapper contentMapper;
+
+    @Resource
+    public RedisUtil redisUtil;
+
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
 
 
@@ -128,7 +136,13 @@ public class DocService {
 
     public void vote(Long id){
         //点赞数+1
-        myDocMapper.increaseVoteCount(id);
+//        myDocMapper.increaseVoteCount(id);
+        String ip = RequestContext.getRemoteAddr();
+        if(redisUtil.validateRepeat("DOC_VOTE_"+id+"_"+ip,3600)){
+            myDocMapper.increaseVoteCount(id);
+        }else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }
 
