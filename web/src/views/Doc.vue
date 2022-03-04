@@ -125,6 +125,7 @@ export default defineComponent({
       if (Tool.isNotEmpty(selectedKeys)) {
         // 选中某一节点时，加载该节点的文档信息
         doc.value = info.node;
+        // doc.value.viewCount++;
         // 加载内容
         handleQueryContent(selectedKeys[0]);
       }

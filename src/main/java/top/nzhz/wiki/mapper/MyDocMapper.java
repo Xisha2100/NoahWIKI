@@ -8,4 +8,6 @@ public interface MyDocMapper {
 
     public void increaseVoteCount(@Param("id") Long id);
 
+    public void updateMusicInfo();
+
 }
