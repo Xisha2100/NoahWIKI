@@ -93,7 +93,8 @@
 
             <a-form-item>
               <a-button type="primary" @click="handlePreviewContent()">
-                <EyeOutlined /> 内容预览
+                <EyeOutlined/>
+                内容预览
               </a-button>
             </a-form-item>
 
@@ -130,7 +131,7 @@ export default defineComponent({
     const route = useRoute();
     const docs = ref();
     const level1 = ref();
-    level1.value=[];
+    level1.value = [];
     const param = ref();
     param.value = {};
     // const ebooks1 = reactive({books: []});
@@ -152,7 +153,7 @@ export default defineComponent({
     const handleQuery = () => {
       loading.value = true;
       level1.value = [];
-      axios.get("doc/all/"+route.query.musicId).then((response) => {
+      axios.get("doc/all/" + route.query.musicId).then((response) => {
         loading.value = false;
         const data = response.data;
         if (data.success) {
@@ -161,8 +162,13 @@ export default defineComponent({
           level1.value = [];
           level1.value = Tool.array2Tree(docs.value, 0);
 
-          treeSelectData.value=Tool.copy(level1.value);
-          treeSelectData.value.unshift({id:0,name:'无'});
+          if (Object.keys(level1.value).length === 0) {
+            // doc.value.parent=0;
+            treeSelectData.value = [{id: 0, name: '无'}];
+          } else {
+            treeSelectData.value = Tool.copy(level1.value);
+            treeSelectData.value.unshift({id: 0, name: '无'});
+          }
           //重置分页组件
         } else {
           message.error(data.message);
@@ -172,7 +178,7 @@ export default defineComponent({
 
     //内容查询
     const handleQueryContent = () => {
-      axios.get("doc/find-content/"+doc.value.id).then((response) => {
+      axios.get("doc/find-content/" + doc.value.id).then((response) => {
         const data = response.data;
         if (data.success) {
           editor.value.txt.html(data.content);
@@ -186,7 +192,7 @@ export default defineComponent({
     const treeSelectData = ref();
     treeSelectData.value = [];
     const doc = ref();
-    doc.value={};
+    doc.value = {};
 
     const modalVisible = ref(false);
     const modalLoading = ref(false);
@@ -198,8 +204,10 @@ export default defineComponent({
     const handleSave = () => {
       modalLoading.value = true;
 
-      doc.value.content=editor.value.txt.html();
+      doc.value.content = editor.value.txt.html();
+
       //保存更新
+
       axios.post("doc/save", doc.value).then((response) => {
         modalLoading.value = false;
         const data = response.data;
@@ -260,9 +268,16 @@ export default defineComponent({
       doc.value = {
         musicId: route.query.musicId
       };
-      treeSelectData.value = Tool.copy(level1.value);
 
-      treeSelectData.value.unshift({id: 0, name: '无'});
+      if (Object.keys(level1.value).length === 0) {
+        // doc.value.parent=0;
+        treeSelectData.value = [{id: 0, name: '无'}];
+      } else {
+        treeSelectData.value = Tool.copy(level1.value);
+        treeSelectData.value.unshift({id: 0, name: '无'});
+      }
+
+
       // const editor = new E("#editor");
       // editor.config.zIndex = 0;
       // editor.create();
@@ -316,8 +331,8 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery();
-      doc.value.musicId=route.query.musicId;
-      editor.value=new E("#editor");
+      doc.value.musicId = route.query.musicId;
+      editor.value = new E("#editor");
       editor.value.config.zIndex = 0;
       editor.value.create();
     });
@@ -357,12 +372,14 @@ export default defineComponent({
   border-top: 1px solid #ccc;
   border-left: 1px solid #ccc;
 }
+
 .wangeditor table td,
 .wangeditor table th {
   border-bottom: 1px solid #ccc;
   border-right: 1px solid #ccc;
   padding: 3px 5px;
 }
+
 .wangeditor table th {
   border-bottom: 2px solid #ccc;
   text-align: center;
@@ -389,6 +406,7 @@ export default defineComponent({
   padding: 3px 5px;
   margin: 0 3px;
 }
+
 .wangeditor pre code {
   display: block;
 }
@@ -400,10 +418,10 @@ export default defineComponent({
 
 /* 和antdv p冲突，覆盖掉 */
 .wangeditor blockquote p {
-  font-family:"YouYuan";
+  font-family: "YouYuan";
   margin: 20px 10px !important;
   font-size: 16px !important;
-  font-weight:600;
+  font-weight: 600;
 }
 
 /* 点赞 */
