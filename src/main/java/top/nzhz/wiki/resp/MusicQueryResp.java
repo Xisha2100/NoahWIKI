@@ -19,7 +19,7 @@ public class MusicQueryResp {
 
     private Integer docCount;
 
-    private Integer viewCount;
+    private Integer listenCount;
 
     private Integer voteCount;
 
@@ -87,12 +87,12 @@ public class MusicQueryResp {
         this.docCount = docCount;
     }
 
-    public Integer getViewCount() {
-        return viewCount;
+    public Integer getListenCount() {
+        return listenCount;
     }
 
-    public void setViewCount(Integer viewCount) {
-        this.viewCount = viewCount;
+    public void setListenCount(Integer viewCount) {
+        this.listenCount = viewCount;
     }
 
     public Integer getVoteCount() {
@@ -117,7 +117,7 @@ public class MusicQueryResp {
         sb.append(", description=").append(description);
         sb.append(", cover=").append(cover);
         sb.append(", docCount=").append(docCount);
-        sb.append(", viewCount=").append(viewCount);
+        sb.append(", listenCount=").append(listenCount);
         sb.append(", voteCount=").append(voteCount);
         sb.append("]");
         return sb.toString();
