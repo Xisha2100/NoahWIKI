@@ -35,10 +35,18 @@
           <template #renderItem="{ item }">
             <a-list-item key="item.name">
               <template #actions>
-          <span v-for="{ type, text } in actions" :key="type">
-            <component :is="type" style="margin-right: 8px"/>
-            {{ text }}
-          </span>
+                <span>
+                  <component v-bind:is="'FileOutlined'" style="margin-right: 8px"/>
+                  {{ item.docCount }}
+                </span>
+                <span>
+                  <component v-bind:is="'UserOutlined'" style="margin-right: 8px"/>
+                  {{ item.listenCount }}
+                </span>
+                <span>
+                  <component v-bind:is="'LikeOutlined'" style="margin-right: 8px"/>
+                  {{ item.voteCount }}
+                </span>
               </template>
 
               <a-list-item-meta :description="item.description">
@@ -74,11 +82,11 @@ export default defineComponent({
   setup() {
     const music = ref();
 
-    const actions: Record<string, string>[] = [
-      {type: 'StarOutlined', text: '152'},
-      {type: 'LikeOutlined', text: '156'},
-      {type: 'MessageOutlined', text: '2'},
-    ];
+    // const actions: Record<string, string>[] = [
+    //   {type: 'StarOutlined', text: '152'},
+    //   {type: 'LikeOutlined', text: '156'},
+    //   {type: 'MessageOutlined', text: '2'},
+    // ];
 
     const level1 = ref();
     let categorys: any;
@@ -118,9 +126,9 @@ export default defineComponent({
           size: 20,
           categoryId2: categoryId2,
         }
-      }).then((response)=>{
-        const data=response.data;
-        music.value=data.content.list;
+      }).then((response) => {
+        const data = response.data;
+        music.value = data.content.list;
       });
     };
 
@@ -146,7 +154,7 @@ export default defineComponent({
     return {
       music,
       level1,
-      actions,
+      // actions,
       isShowWelcome,
 
       handleClick,
