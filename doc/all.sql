@@ -176,13 +176,49 @@ drop table if exists `music_snapshot`;
 
 create table `music_snapshot`
 (
-    `id`              bigint not null comment 'id',
+    `id`              bigint  auto_increment not null comment 'id',
     `music_id`        bigint not null comment '电子书id',
     `date`            date   not null comment '快照日期',
     `listen_count`    int    not null comment '听歌数',
     `vote_count`      int    not null comment '点赞数',
     `listen_increase` int    not null comment '听歌数增长',
     `vote_increase`   int    not null comment '点赞数增长',
-    primary key (`id`)
+    primary key (`id`),
+    unique key `music_id_data_unique` (`music_id`,`date`)
 ) engine = innodb
   default charset = utf8mb4 comment ='音乐快照表';
+
+update music t1,(select music_id, count(1) doc_count, sum(view_count) view_count, sum(vote_count) vote_count
+                 from doc
+                 group by music_id) t2
+set t1.doc_count= t2.doc_count,
+    t1.listen_count = t2.view_count,
+    t1.vote_count=t2.vote_count
+where t1.id = t2.music_id;
+
+
+insert into music_snapshot(music_id, `date`, listen_count, vote_count, listen_increase, vote_increase)
+select id, curdate(), 0, 0, 0, 0
+from music t1
+where not exists(select 1
+                 from music_snapshot t2
+                 where t1.id = t2.music_id
+                   and t2.`date` = curdate());
+
+update music_snapshot t1, music t2
+set t1.listen_count=t2.listen_count,
+    t1.vote_count=t2.vote_count
+where t1.`date` = curdate()
+  and t1.music_id = t2.id;
+
+select t1.music_id, t1.listen_count, t1.vote_count
+from music_snapshot t1
+where t1.`date` = date_sub(curdate(), interval 1 day);
+
+update music_snapshot t1 left join (select music_id, listen_count, vote_count
+                                    from music_snapshot
+                                    where `date` = date_sub(curdate(), interval 1 day)) t2
+    on t1.music_id=t2.music_id
+set t1.listen_increase=(t1.listen_count-ifnull(t2.listen_count,0)),
+    t1.vote_increase=(t1.vote_count-ifnull(t2.vote_count,0))
+where  `date`=curdate();
