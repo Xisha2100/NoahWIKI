@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="top.nzhz.wiki.mapper.MySnapshotMapper">
+
+    <update id="genSnapshot">
+        insert into music_snapshot(music_id, `date`, listen_count, vote_count, listen_increase, vote_increase)
+        select id, curdate(), 0, 0, 0, 0
+        from music t1
+        where not exists(select 1
+                         from music_snapshot t2
+                         where t1.id = t2.music_id
+                           and t2.`date` = curdate());
+
+        update music_snapshot t1, music t2
+        set t1.listen_count=t2.listen_count,
+            t1.vote_count=t2.vote_count
+        where t1.`date` = curdate()
+          and t1.music_id = t2.id;
+
+        update music_snapshot t1 left join (select music_id, listen_count, vote_count
+            from music_snapshot
+            where `date` = date_sub(curdate(), interval 1 day)) t2
+        on t1.music_id=t2.music_id
+            set t1.listen_increase=(t1.listen_count-ifnull(t2.listen_count,0)),
+                t1.vote_increase=(t1.vote_count-ifnull(t2.vote_count,0))
+        where  `date`=curdate();
+        </update>
+
+</mapper>
