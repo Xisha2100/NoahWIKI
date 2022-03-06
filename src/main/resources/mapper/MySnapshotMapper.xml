@@ -21,9 +21,21 @@
             from music_snapshot
             where `date` = date_sub(curdate(), interval 1 day)) t2
         on t1.music_id=t2.music_id
-            set t1.listen_increase=(t1.listen_count-ifnull(t2.listen_count,0)),
-                t1.vote_increase=(t1.vote_count-ifnull(t2.vote_count,0))
-        where  `date`=curdate();
-        </update>
+            set t1.listen_increase=(t1.listen_count-ifnull(t2.listen_count, 0)),
+                t1.vote_increase=(t1.vote_count-ifnull(t2.vote_count, 0))
+        where `date`=curdate();
+    </update>
+
+    <select id="getStatistic" resultType="top.nzhz.wiki.resp.StatisticResp">
+        select t1.`date`               as `data`,
+               sum(t1.listen_count)    as listenCount,
+               sum(t1.vote_count)      as voteCount,
+               sum(t1.listen_increase) as listenIncrease,
+               sum(t1.vote_increase)   as voteIncrease
+        from music_snapshot t1
+        where t1.`date` >= date_sub(curdate(), interval 1 day)
+        group by t1.`date`
+        order by t1.`date` asc;
+    </select>
 
 </mapper>
