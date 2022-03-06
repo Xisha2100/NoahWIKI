@@ -22,6 +22,7 @@ import top.nzhz.wiki.resp.DocQueryResp;
 import top.nzhz.wiki.resp.PageResp;
 import top.nzhz.wiki.utils.RedisUtil;
 import top.nzhz.wiki.utils.RequestContext;
+import top.nzhz.wiki.websocket.WebSocketServer;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class DocService {
 
     @Resource
     public RedisUtil redisUtil;
+
+    @Resource
+    public WebSocketServer webSocketServer;
 
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
 
@@ -143,6 +147,9 @@ public class DocService {
         }else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
         }
+
+        Doc docDB=docMapper.selectByPrimaryKey(id);
+        webSocketServer.sentInfo("["+docDB.getName()+"]被点赞");
     }
 
     public void updateMusicInfo(){
