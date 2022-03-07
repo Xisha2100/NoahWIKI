@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import top.nzhz.wiki.domain.Content;
 import top.nzhz.wiki.domain.Doc;
@@ -97,6 +98,7 @@ public class DocService {
         return respList;
     }
 
+    @Transactional
     public void save(DocSaveReq req) {
         Doc doc = new Doc();
         BeanUtils.copyProperties(req, doc);
