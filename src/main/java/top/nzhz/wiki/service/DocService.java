@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -44,7 +45,7 @@ public class DocService {
     public RedisUtil redisUtil;
 
     @Resource
-    public WebSocketServer webSocketServer;
+    public WebSocketService webSocketService;
 
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
 
@@ -149,7 +150,8 @@ public class DocService {
         }
 
         Doc docDB=docMapper.selectByPrimaryKey(id);
-        webSocketServer.sentInfo("["+docDB.getName()+"]被点赞");
+        String logID= MDC.get("LOG_ID");
+        webSocketService.sendInfo("["+docDB.getName()+"]被点赞",logID);
     }
 
     public void updateMusicInfo(){
