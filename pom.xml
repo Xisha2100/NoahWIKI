@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>wiki-single</module>
+        <module>wiki-eureka</module>
     </modules>
 
 
