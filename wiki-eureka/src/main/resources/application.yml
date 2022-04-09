@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: wiki-eureka
+
+server:
+  port: 8000
+
+eureka:
+  instance:
+    hostname: localhost
+#是否注册自身
+  client:
+    register-with-eureka: false
+#是否同步（当前单节点无需同步）
+    fetch-registry: false
+    service-url.defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
