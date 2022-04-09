@@ -7,6 +7,7 @@
     <modules>
         <module>wiki-single</module>
         <module>wiki-eureka</module>
+        <module>wiki-gateway</module>
     </modules>
 
 
@@ -18,7 +19,12 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring.cloud-version>2021.0.0</spring.cloud-version>
+        <spring.cloud.version>2021.0.0</spring.cloud.version>
+        <spring.boot.version>2.6.6</spring.boot.version>
+        <zuul.version>2.2.10.RELEASE</zuul.version>
+        <fastjson.version>1.2.70</fastjson.version>
+        <pagehelper.version>1.4.1</pagehelper.version>
+        <mysql.connector.java.version>8.0.22</mysql.connector.java.version>
     </properties>
 
     <dependencyManagement>
@@ -27,7 +33,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.6.6</version>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -35,21 +41,27 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring.cloud-version}</version>
+                <version>${spring.cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
 
             <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+                <version>${zuul.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.2.70</version>
+                <version>${fastjson.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>1.4.1</version>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <dependency>
@@ -61,7 +73,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>8.0.22</version>
+                <version>${mysql.connector.java.version}</version>
             </dependency>
 
         </dependencies>
