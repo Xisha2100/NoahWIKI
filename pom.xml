@@ -8,6 +8,7 @@
         <module>wiki-single</module>
         <module>wiki-eureka</module>
         <module>wiki-gateway</module>
+        <module>wiki-service</module>
     </modules>
 
 
