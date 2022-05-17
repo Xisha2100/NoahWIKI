@@ -1,7 +1,7 @@
 package top.nzhz.wiki.exception;
 
 /**
- * @Class: IgnoreRespAdvice
+ * @Class: BusinessException
  * @Description: 通用异常定义
  * @Author: Xisha
  * @Date: 2022/05/17 21:35
