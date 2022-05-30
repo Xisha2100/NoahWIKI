@@ -11,5 +11,5 @@
 将个人学习的体会和积累，以及个人收藏的资源整合
 
 ## 当前进度
-完成了单节点的部署（相关内容位于wiki-single内），尝试进行推广至多节点分布式
-新键springcloud branch作为默认Branch
+完成了单节点的部署（相关内容位于wiki-single内），尝试进行推广至微服务
+新建springcloud branch作为默认Branch
